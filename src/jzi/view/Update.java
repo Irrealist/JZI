@@ -76,21 +76,7 @@ public enum Update {
      */
     FightPanelUpdate,
     /**
-     * Occurs when the player have to place objects.
-     */
-    CurrentToPlaceUpdate,
-    /**
-     * Occurs when the player have set all objects and the Label needs to be
-     * updated.
-     */
-    CurrentToPlaceReset,
-    /**
      * Occurs when a player change the language of a game.
      */
     ChangeLanguage,
-    /**
-     * Occurs when objects need to be placed on a tile.
-     */
-    PlaceObjects,
-
 }

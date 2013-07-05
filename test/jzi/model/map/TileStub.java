@@ -106,17 +106,4 @@ public class TileStub implements ITile {
      // TODO Auto-generated method stub
         return null;
     }
-
-    @Override
-    public boolean isFinalized() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void setFinalized() {
-        // TODO Auto-generated method stub
-        
-    }
-
 }
