@@ -121,7 +121,7 @@ public class FightState implements IState {
         game.removeZombie();
         game.update(Update.PlayerAttributeUpdate);
         game.update(Update.FightWon);
-        game.setState(new FightState(window));
+        game.setState(new PlayerState(window));
 
         if (game.checkWin()) {
             window.setMenu(new WinnerMenu(window, game));
