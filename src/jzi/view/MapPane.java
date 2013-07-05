@@ -32,6 +32,7 @@ import jzi.model.IGame;
 import jzi.model.IPlayer;
 import jzi.model.IZombie;
 import jzi.model.SuperZombie;
+import jzi.model.map.Coordinates;
 import jzi.model.map.Field;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IField;
@@ -97,6 +98,10 @@ public class MapPane extends JPanel {
 	 * Last clicked point.
 	 */
 	private Point2D lastClicked;
+	/**
+	 * Field coordinates that the mouse is currently hovering over.
+	 */
+	private ICoordinates mouseCoords;
 
 	/**
 	 * Constructor with game instance, initializes transform attributes and
@@ -191,6 +196,7 @@ public class MapPane extends JPanel {
 		// paint empty spots
 		if (game.getCurrentTile() != null) {
 			paintEmptyTiles(graphics);
+			paintCurrentTile(graphics);
 		}
 
 		// paint all zombies
@@ -217,7 +223,7 @@ public class MapPane extends JPanel {
 
 		// draw the tile image
 		graphics.drawImage(image, coords.getX() * Tile.TILE_SIZE, coords.getY()
-				* Tile.TILE_SIZE, this);
+				* Tile.TILE_SIZE, null);
 
 		// draw objects on each field
 		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
@@ -231,7 +237,7 @@ public class MapPane extends JPanel {
 					graphics.drawImage(ammoImage, coords.getX()
 							* Tile.TILE_SIZE + x * Field.FIELD_SIZE,
 							coords.getY() * Tile.TILE_SIZE + y
-									* Field.FIELD_SIZE, this);
+									* Field.FIELD_SIZE, null);
 				}
 
 				// draw life points
@@ -239,7 +245,7 @@ public class MapPane extends JPanel {
 					graphics.drawImage(lifeImage, coords.getX()
 							* Tile.TILE_SIZE + x * Field.FIELD_SIZE,
 							coords.getY() * Tile.TILE_SIZE + y
-									* Field.FIELD_SIZE, this);
+									* Field.FIELD_SIZE, null);
 				}
 			}
 		}
@@ -259,6 +265,10 @@ public class MapPane extends JPanel {
 				AlphaComposite.SRC_OVER, 0.1f));
 
 		for (ICoordinates coords : game.getMap().getEmptyTiles()) {
+			if (coords.equals(mouseCoords)) {
+				continue;
+			}
+
 			if (game.getMap().checkTileRotations(coords, tile)) {
 				graphics.setColor(Color.GREEN);
 			} else {
@@ -268,6 +278,29 @@ public class MapPane extends JPanel {
 			graphics.fillRect(coords.getX() * Tile.TILE_SIZE, coords.getY()
 					* Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
 		}
+
+		graphics.setComposite(comp);
+	}
+
+	private void paintCurrentTile(Graphics2D graphics) {
+		ITile tile = game.getCurrentTile();
+		Composite comp = graphics.getComposite();
+
+		if (mouseCoords == null
+				|| !game.getMap().getEmptyTiles().contains(mouseCoords)) {
+			return;
+		}
+
+		if (game.getMap().checkTile(mouseCoords, tile)) {
+			graphics.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.6f));
+		} else {
+			graphics.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.25f));
+		}
+
+		graphics.drawImage(TileGraphic.getRenderImage(tile), mouseCoords.getX()
+				* Tile.TILE_SIZE, mouseCoords.getY() * Tile.TILE_SIZE, null);
 
 		graphics.setComposite(comp);
 	}
@@ -289,12 +322,12 @@ public class MapPane extends JPanel {
 				graphics.drawImage(superZombieImage, tile.getX()
 						* Tile.TILE_SIZE + field.getX() * Field.FIELD_SIZE,
 						tile.getY() * Tile.TILE_SIZE + field.getY()
-								* Field.FIELD_SIZE, this);
+								* Field.FIELD_SIZE, null);
 			} else {
 				graphics.drawImage(zombieImage, tile.getX() * Tile.TILE_SIZE
 						+ field.getX() * Field.FIELD_SIZE, tile.getY()
 						* Tile.TILE_SIZE + field.getY() * Field.FIELD_SIZE,
-						this);
+						null);
 			}
 		}
 
@@ -494,6 +527,8 @@ public class MapPane extends JPanel {
 		 *            corresponding mouse event
 		 */
 		public void mouseExited(MouseEvent e) {
+			mouseCoords = null;
+			repaint();
 		}
 
 		/**
@@ -504,6 +539,15 @@ public class MapPane extends JPanel {
 		 *            corresponding mouse event
 		 */
 		public void mouseMoved(MouseEvent e) {
+			// transform new point into map coordinates
+			try {
+				mouseCoords = Coordinates.tileFromPoint(at.inverseTransform(
+						e.getPoint(), null));
+			} catch (NoninvertibleTransformException te) {
+				return;
+			}
+
+			repaint();
 		}
 
 		/**
