@@ -1,5 +1,6 @@
 package jzi.view;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,14 +13,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.HashMap;
 
 import net.miginfocom.swing.MigLayout;
-
 import jzi.controller.state.FightState;
 import jzi.controller.state.IState;
 import jzi.controller.state.PlayerState;
@@ -230,6 +231,7 @@ public class GameMenu implements Menu {
 		this.window = window;
 
 		createUpdateMap();
+		readImages();
 		setLayouts();
 		createLabelsandButtons(game);
 		setIcons();
@@ -366,6 +368,22 @@ public class GameMenu implements Menu {
 				.getActionListener(Action.PlaceZombie));
 		useAmmo.addActionListener(window.getActionListener(Action.useAmmo));
 		useLife.addActionListener(window.getActionListener(Action.useLife));
+	}
+
+	/**
+	 * Loads images to be used in the game.
+	 */
+	private void readImages() {
+		try {
+			ammoImage = ImageIO
+					.read(new File("./resource/gameObjects/Ammo.png"));
+			lifeImage = ImageIO
+					.read(new File("./resource/gameObjects/Life.png"));
+			zombieImage = ImageIO.read(new File(
+					"./resource/gameObjects/Zombie.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

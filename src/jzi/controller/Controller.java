@@ -499,6 +499,7 @@ public class Controller implements IController {
         public void actionPerformed(final ActionEvent e) {
             game.rollDie();
             game.getCurrentState().rollAction();
+            game.update(Update.Map);
         }
     }
 
@@ -512,6 +513,7 @@ public class Controller implements IController {
         public void actionPerformed(final ActionEvent e) {
             ((ZombieState) game.getCurrentState())
                     .setZombieMode(ZombieMode.Move);
+            game.update(Update.Map);
         }
     }
 
@@ -526,6 +528,7 @@ public class Controller implements IController {
             ((ZombieState) game.getCurrentState())
                     .setZombieMode(ZombieMode.Place);
             game.setCurrentZombie(null);
+            game.update(Update.Map);
         }
     }
 

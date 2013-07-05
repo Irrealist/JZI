@@ -109,4 +109,6 @@ public interface IMap extends java.io.Serializable {
 	boolean checkTileRotations(ICoordinates coord, ITile tile);
 
 	LinkedList<ICoordinates> getEmptyTiles();
+
+	LinkedList<ICoordinates> getEmptyBuildings();
 }
