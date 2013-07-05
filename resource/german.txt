@@ -12,8 +12,8 @@ Deutsch
 English
 ----------
 */MainMenu
-Starte ein Spiel
-Koop-Modus
+Neues Spiel
+Coop-Spiel
 Laden
 Beenden
 ----------
@@ -25,14 +25,14 @@ Zombifizierung
 Hardcore
 Anfangsmunition
 Spieler hinzufügen
-Starte Spiel
+Spiel starten
 ----------
 */GameMenu
 Würfeln
-Teil ziehen
+Kartenteil ziehen
 Links drehen
 Rechts drehen
-Fortsetzten
+Fortsetzen
 Zombie bewegen
 Zombie platzieren
 Platzieren
