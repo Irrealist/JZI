@@ -735,6 +735,7 @@ public class GameMenu implements Menu {
 		@Override
 		public void execute(Observable o) {
 			updateCurrentPlayer((Game) o);
+			mapPane.focus(game.getCurrentPlayer().getCoordinates());
 			mapPane.repaint();
 		}
 	}

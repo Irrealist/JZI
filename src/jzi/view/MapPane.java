@@ -220,6 +220,22 @@ public class MapPane extends JPanel {
 	}
 
 	/**
+	 * Focuses the map on a field.
+	 * 
+	 * @param coords
+	 *            coordinates of field to focus on
+	 */
+	public void focus(ICoordinates coords) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
+
+		translateX = -tile.getX() * Tile.TILE_SIZE - (field.getX() - 1)
+				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
+		translateY = -tile.getY() * Tile.TILE_SIZE - (field.getY() - 1)
+				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
+	}
+
+	/**
 	 * Highlights all empty building fields.
 	 * 
 	 * @param graphics
