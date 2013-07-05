@@ -687,7 +687,6 @@ public class Controller implements IController {
             if (game.getCurrentPlayer().getLives() == 0) {
                 game.setState(new ZombieState(window));
                 game.revive();
-                // TODO: notify player
             } else {
                 ((GameMenu) window.getMenu()).getDie().setIcon(null);
                 ((GameMenu) window.getMenu()).getRollDieButton().setEnabled(

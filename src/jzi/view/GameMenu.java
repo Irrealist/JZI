@@ -1013,7 +1013,6 @@ public class GameMenu implements Menu {
             zombieImage = ImageIO.read(new File(
                     "./resource/gameObjects/Zombie.png"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

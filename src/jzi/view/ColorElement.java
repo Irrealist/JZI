@@ -48,16 +48,6 @@ public class ColorElement extends JComboBox<Color> {
     }
 
     /**
-     * TODO
-     * 
-     * @return
-     */
-
-    public JComboBox<Color> getComponent() {
-        return this;
-    }
-
-    /**
      * Gets the current color.
      *
      * @return an integer specifying the currently selected list item.

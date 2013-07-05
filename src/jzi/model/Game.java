@@ -729,7 +729,6 @@ public class Game extends Observable implements IGame {
         getCurrentPlayer().revive();
 
         if (hardcore && getCurrentPlayer().getRevives() > revives) {
-            // TODO: Notify player
             surrender();
         }
 
