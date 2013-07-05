@@ -262,7 +262,7 @@ public class MapPane extends JPanel {
 		ITile tile = game.getCurrentTile();
 
 		graphics.setComposite(AlphaComposite.getInstance(
-				AlphaComposite.SRC_OVER, 0.1f));
+				AlphaComposite.SRC_OVER, 0.2f));
 
 		for (ICoordinates coords : game.getMap().getEmptyTiles()) {
 			if (coords.equals(mouseCoords)) {
