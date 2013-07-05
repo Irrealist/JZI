@@ -201,7 +201,8 @@ public class MapPane extends JPanel {
 			paintCurrentTile(graphics);
 		}
 
-		if (game.getCurrentState() instanceof ZombieState) {
+		if (game.getCurrentState() instanceof ZombieState
+				&& game.getCurrentPlayer().hasRolledZombie()) {
 			if (((ZombieState) game.getCurrentState()).getZombieMode().equals(
 					ZombieMode.Place)) {
 				paintEmptyBuildings(graphics);
@@ -357,7 +358,8 @@ public class MapPane extends JPanel {
 			ICoordinates field = zombie.getCoordinates().toRelativeField();
 			ICoordinates tile = zombie.getCoordinates().toTile();
 
-			if (game.getCurrentState() instanceof ZombieState) {
+			if (game.getCurrentState() instanceof ZombieState
+					&& game.getCurrentPlayer().hasRolledZombie()) {
 				if (((ZombieState) game.getCurrentState()).getZombieMode()
 						.equals(ZombieMode.Move) && game.canZombieMove(zombie)) {
 					graphics.setComposite(alpha);
