@@ -110,4 +110,10 @@ public class MapStub implements IMap {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public LinkedList<ICoordinates> getEmptyBuildings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

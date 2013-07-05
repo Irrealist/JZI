@@ -28,6 +28,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import jzi.controller.state.ZombieMode;
+import jzi.controller.state.ZombieState;
 import jzi.model.IGame;
 import jzi.model.IPlayer;
 import jzi.model.IZombie;
@@ -199,6 +201,13 @@ public class MapPane extends JPanel {
 			paintCurrentTile(graphics);
 		}
 
+		if (game.getCurrentState() instanceof ZombieState) {
+			if (((ZombieState) game.getCurrentState()).getZombieMode().equals(
+					ZombieMode.Place)) {
+				paintEmptyBuildings(graphics);
+			}
+		}
+
 		// paint all zombies
 		paintZombies(graphics);
 
@@ -207,6 +216,33 @@ public class MapPane extends JPanel {
 
 		// and restore the old transform
 		graphics.setTransform(transformBackup);
+	}
+
+	/**
+	 * Highlights all empty building fields.
+	 * 
+	 * @param graphics
+	 *            graphics object to paint onto
+	 */
+	private void paintEmptyBuildings(Graphics2D graphics) {
+		Composite comp = graphics.getComposite();
+
+		graphics.setComposite(AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.25f));
+		graphics.setColor(Color.GREEN);
+
+		for (ICoordinates coords : game.getMap().getEmptyBuildings()) {
+			ICoordinates tile = coords.toTile();
+			ICoordinates field = coords.toRelativeField();
+
+			graphics.fillRect(tile.getX() * Tile.TILE_SIZE + field.getX()
+					* Field.FIELD_SIZE,
+					tile.getY() * Tile.TILE_SIZE + field.getY()
+							* Field.FIELD_SIZE, Field.FIELD_SIZE,
+					Field.FIELD_SIZE);
+		}
+
+		graphics.setComposite(comp);
 	}
 
 	/**
@@ -312,10 +348,29 @@ public class MapPane extends JPanel {
 	 *            graphics object that handles the painting
 	 */
 	private void paintZombies(Graphics2D graphics) {
+		Composite comp = graphics.getComposite();
+		AlphaComposite alpha = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.25f);
+
 		// iterate through zombies
 		for (IZombie zombie : game.getZombies()) {
 			ICoordinates field = zombie.getCoordinates().toRelativeField();
 			ICoordinates tile = zombie.getCoordinates().toTile();
+
+			if (game.getCurrentState() instanceof ZombieState) {
+				if (((ZombieState) game.getCurrentState()).getZombieMode()
+						.equals(ZombieMode.Move) && game.canZombieMove(zombie)) {
+					graphics.setComposite(alpha);
+					graphics.setColor(Color.GREEN);
+					graphics.fillRect(
+							tile.getX() * Tile.TILE_SIZE + field.getX()
+									* Field.FIELD_SIZE, tile.getY()
+									* Tile.TILE_SIZE + field.getY()
+									* Field.FIELD_SIZE, Field.FIELD_SIZE,
+							Field.FIELD_SIZE);
+					graphics.setComposite(comp);
+				}
+			}
 
 			// check type of zombie and draw according image
 			if (zombie instanceof SuperZombie) {

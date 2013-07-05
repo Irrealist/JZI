@@ -85,6 +85,32 @@ public class Map implements IMap, java.io.Serializable {
 	}
 
 	/**
+	 * Gets a list of all empty building fields.
+	 * 
+	 * @return linked list of empty buildings
+	 */
+	public LinkedList<ICoordinates> getEmptyBuildings() {
+		LinkedList<ICoordinates> fields = new LinkedList<>();
+
+		for (java.util.Map.Entry<ICoordinates, ITile> entry : tiles.entrySet()) {
+			ITile tile = entry.getValue();
+
+			for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
+				for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
+					IField field = tile.getField(y, x);
+
+					if (field.getType().equals("building")
+							&& field.getZombie() == null) {
+						fields.add(field.getCoordinates());
+					}
+				}
+			}
+		}
+
+		return fields;
+	}
+
+	/**
 	 * Gets a list of all empty spaces adjacent to at least one tile.
 	 * 
 	 * @return linked list of empty tiles
