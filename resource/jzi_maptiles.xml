@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--current XML file "jzi_maptiles.xml" from 28.04.2013
+-->
+<!DOCTYPE zombieinvasion SYSTEM "zombieinvasion.dtd">
+<zombieinvasion>
+<maptile img="corner.png" count="4">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="street" up="true" down="true"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" up="true"/>
+<field pos="right" type="blocked"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="blocked"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile img="intersection.png" count="4">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="street" up="true" down="true"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile img="street.png" count="4">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="blocked"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="blocked"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile img="crossstreet.png" count="4">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="blocked"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Town-Center" img="towncenter.png" count="1" zombies="0" life="0" ammo="0">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="street" up="true" down="true"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Army-Shop" img="armyshop.png" count="1" zombies="2" life="0" ammo="2">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="blocked"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="building" right="true"/>
+<field pos="bottom" type="building" left="true" right="true" up="true"/>
+<field pos="bottomright" type="building" left="true"/>
+</maptile>
+<maptile name="Skate-Shop" img="skateshop.png" count="1" zombies="3" life="0" ammo="1">
+<field pos="topleft" type="building" right="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Tool-Shop" img="toolshop.png" count="1" zombies="3" life="1" ammo="2">
+<field pos="topleft" type="building" right="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true" down="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="building" up="true"/>
+</maptile>
+<maptile name="Flower-Shop" img="flowershop.png" count="1" zombies="3" life="1" ammo="1">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true"/>
+<field pos="topright" type="building" left="true"/>
+<field pos="left" type="street" left="true" right="true" up="true"/>
+<field pos="center" type="street" left="true" right="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Sports-Shop" img="sportsshop.png" count="1" zombies="4" life="2" ammo="2">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="building" right="true" up="true"/>
+<field pos="center" type="building" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Toy-Shop" img="toyshop.png" count="1" zombies="4" life="1" ammo="1">
+<field pos="topleft" type="building" right="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true" down="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="building" up="true"/>
+</maptile>
+<maptile name="Drug-Store" img="drugstore.png" count="1" zombies="3" life="3" ammo="0">
+<field pos="topleft" type="blocked"/>
+<field pos="top" type="blocked"/>
+<field pos="topright" type="blocked"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="building" right="true"/>
+<field pos="bottom" type="building" left="true" right="true" up="true"/>
+<field pos="bottomright" type="building" left="true"/>
+</maptile>
+<maptile name="Garden-Center" img="gardencenter.png" count="1" zombies="6" life="2" ammo="3">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="building" right="true" up="true" down="true"/>
+<field pos="center" type="building" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true" down="true"/>
+<field pos="bottomleft" type="building" up="true"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="building" up="true"/>
+</maptile>
+<maptile name="Fire-Station" img="firestation.png" count="1" zombies="6" life="3" ammo="2">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="building" right="true" up="true"/>
+<field pos="center" type="building" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true" down="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="building" up="true"/>
+</maptile>
+<maptile name="Police-Station" img="policestation.png" count="1" zombies="5" life="0" ammo="4">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="building" right="true" up="true"/>
+<field pos="center" type="building" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Gas-Station" img="gasstation.png" count="1" zombies="3" life="1" ammo="1">
+<field pos="topleft" type="building" right="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true"/>
+<field pos="left" type="street" left="true" right="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="street" left="true" right="true"/>
+<field pos="bottomleft" type="blocked"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="blocked"/>
+</maptile>
+<maptile name="Helicopter" img="helicopter.png" count="1" zombies="9" life="0" ammo="0">
+<field pos="topleft" type="street" right="true" down="true"/>
+<field pos="top" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="topright" type="street" left="true" down="true"/>
+<field pos="left" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="center" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="bottomleft" type="street" right="true" up="true"/>
+<field pos="bottom" type="street" left="true" right="true" up="true" down="true"/>
+<field pos="bottomright" type="street" left="true" up="true"/>
+</maptile>
+<maptile name="Hospital" img="hospital.png" count="1" zombies="8" life="4" ammo="0">
+<field pos="topleft" type="building" right="true" down="true"/>
+<field pos="top" type="building" left="true" right="true" down="true"/>
+<field pos="topright" type="building" left="true" down="true"/>
+<field pos="left" type="building" right="true" up="true" down="true"/>
+<field pos="center" type="building" left="true" right="true" up="true" down="true"/>
+<field pos="right" type="building" left="true" up="true" down="true"/>
+<field pos="bottomleft" type="building" up="true"/>
+<field pos="bottom" type="street" up="true" down="true"/>
+<field pos="bottomright" type="building" up="true"/>
+</maptile>
+</zombieinvasion>

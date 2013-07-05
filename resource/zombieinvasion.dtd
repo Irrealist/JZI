@@ -1,0 +1,37 @@
+<!--Version 0.1 by guest24
+-->
+<!--zombieinvasion.dtd defines the document structure with a list of legal elements and attributes for jzi_maptiles.xml
+-->
+
+<!ELEMENT zombieinvasion	(maptile)*>
+<!ELEMENT maptile	(field)*>
+<!ATTLIST maptile
+name	CDATA	#IMPLIED
+img		ID		#REQUIRED
+count	NMTOKEN	#REQUIRED
+zombies	NMTOKEN	#IMPLIED
+life	NMTOKEN	#IMPLIED
+ammo	NMTOKEN	#IMPLIED
+>
+<!ELEMENT field	EMPTY>
+<!ATTLIST field
+pos		(topleft|top|topright|left|center|right|bottomleft|bottom|bottomright)	#REQUIRED
+type	(building|blocked|street)	#REQUIRED
+left	(true)	#IMPLIED 
+right 	(true)	#IMPLIED
+up		(true)	#IMPLIED
+down	(true)	#IMPLIED
+>
+
+
+
+
+
+
+
+
+
+
+
+
+

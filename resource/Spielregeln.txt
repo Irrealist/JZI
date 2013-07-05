@@ -1,0 +1,74 @@
+﻿Spielregeln
+
+Die folgenden Spielregeln orientieren sich grob an dem Spiel "Zombies!!!" von Pegaus Spiele (2009).
+
+Inhaltsverzeichnis
+
+1 Ziel des Spiels
+2 Vorbereitung
+3 Spielablauf
+4 Kartenteile anlegen
+5 Kampf
+6 Bewegung (Spielerbewegung)
+7 Bewegung (Zombiebewegung)
+8 Zombietötungen (Punktzahl)
+9 Weitere Regeln und Klarstellungen
+
+Ziel des Spiels
+Das Ziel von Zombie Invasion ist es, als erster Spieler den Hubschrauber auf dem Hubschrauberlandeplatz zu erreichen und aus der von Zombies überrannten Stadt zu fliehen. Alternativ gewinnt ein Spieler ebenfalls, wenn er als erstes 20 Zombies getötet hat.
+Das Spiel endet in folgenden Fällen:
+Ein Spieler erreicht die Mitte des Hubschrauberlandeplatzes und, falls vorhanden, besiegt den Zombie auf diesem Feld.
+Ein Spieler hat insgesamt 20 Zombies getötet.
+
+Vorbereitung
+Der Rathausplatz wird in die Mitte des Spielfeldes gelegt. Jede Spielfigur wird auf das mittlere Feld des Rathausplatzes gesetzt. Die übrigen Kartenteile werden gemischt und verdeckt. Der Hubschrauberlandeplatz wird unter den Stapel gelegt (als letztes Kartenteil). Jeder Spieler erhält für seine Spielfigur drei Lebensmarken und drei Munitionsmarken. Der Startspieler wird zufällig ermittelt.
+
+Spielablauf
+Während eines Zuges führt der Spieler folgende Aktionen aus (in gegebener Reihenfolge):
+1. Er zieht ein Kartenteil und legt ihn an die Stadt an. Wenn die Karte nicht angelegt werden kann, dann wird dieser Kartenteil aus dem Spiel entfernt und es geht normal weiter.
+2. Falls die Spielfigur auf einem Feld zusammen mit einem Zombie steht, so muss er gegen diesen kämpfen (siehe Kampfregeln).
+3. Der Spieler würfelt einen sechsseitigen Würfel und kann die Spielfigur um die geworfene Augenzahl versetzen. Die geworfene Augenzahl ist aber nur ein Maximalwert, die Spielfigur darf sich auch um weniger Felder bewegen oder stehen bleiben. Er muss während seiner Bewegung alle Zombies bekämpfen, die er unterwegs trifft. Sammle alle Lebens- und Muniti- onsmarken auf, die die Spielfigur unterwegs findet.
+4. Der Spieler würfelt einen sechsseitigen Würfel um die maximale Anzahl der Zombies zu bestimmen, die er (sofern möglich) jeweils um ein Feld versetzen möchte. Ein Zombie kann sich pro Zug nur um ein Feld bewegen.
+
+Kartenteile anlegen
+Ein Kartenteil wird immer waagerecht oder senkrecht an ein anderes Kartenteil angelegt.
+Die Kartenteile dürfen in jede Richtung gedreht werden, müssen aber immer so platziert werden, dass keine abgehende Straße durch ein Gebäude blockiert wird. Alle Straße müssen verbunden sein.
+Kartenteile mit namentlich gekennzeichneten Gebäuden haben eine definierte Anzahl an Zombies, Lebens- und Munitionsmarken, die vom aktuellen Spieler verteilt werden können. Auf einem Feld darf maximal eine Lebensmarke oder eine Munitionsmarke gelegt werden (auch nicht beide auf das gleiche Feld). Zombies und Marken dürfen nur in Gebäuden platziert werden.
+Kartenteile ohne namentlich gekennzeichnetes Gebäude erhalten keine Lebens- oder Munitionsmarken, aber einen Zombie an jeden Straßenanschluss.
+Wenn der Hubschrauberlandeplatz nicht angelegt werden konnte (und dieses Kartenteil damit aus dem Spiel entfernt wird), dann erhalten alle Spieler einen zusätzlichen Punkt auf ihren Kampfwurf.
+
+Kampf
+Der Kampf wird durch das Würfeln eines sechsseitigen Würfels simuliert. Bei einer 4, 5 oder 6 gewinnt die Spielfigur und tötet den Zombie. Bei einer 1, 2 oder 3 verliert die Spielfigur und du musst entweder eine Lebensmarke opfern, um den Kampf wiederholen zu dürfen, oder deinen Würfelwurf mit sovielen Munitionsmarken aufwerten, dass er erfolgreich wird.
+Beispiel: Du kämpfst gegen einen Zombie und würfelst eine 2. Du kannst dann eine Lebensmarke opfern und nochmal würfeln, oder du setzt zwei Munitionsmarken ein, um das Endergebnis von 2 auf 4 anzuheben.
+Der Kampf wird solange fortgesetzt, bis der Spieler entweder gewinnt oder keine Lebensmarken mehr hat. Ein Spieler kann den Kampf niemals von sich aus abbrechen.
+Wenn ein Spieler keine Lebensmarken mehr hat, dann endet seine Bewegung und er muss seine Spielfigur zurück ins mittlere Feld des Rathausplatzes stellen. Der Rest seiner Bewegungsphase verfällt. Er bekommt 5 Strafpunkte (5 Zombies werden ihm abgezogen). Der Rest des Zuges wird wie immer durchgeführt.
+Wenn eine Spielfigur stirbt und gezwungen ist, von vorne zu beginnen, dann fängt er seinen nächsten Zug wieder mit drei Lebens- und drei Munitionsmarken an.
+
+Bewegung (Spielerbewegung)
+Der sechsseitige Würfel bestimmt die Anzahl der Felder, die sich eine Spielfigur maximal bewegen darf.
+Diagonale Bewegung ist nicht erlaubt.
+Ein Spieler muss nicht die gesamte erwürfelte Augenzahl nutzen, er kann jederzeit vorher beenden. Spieler dürfen sich nur auf Straßen oder in Gebäuden bewegen (nicht auf blockierten Feldern / gesperrte Gebäude). Spieler dürfen Gebäude nur durch gekennzeichnete Türen betreten und verlassen.
+Es können nur Übergänge genutzt werden, die durch eine helle, weiße Linie miteinander verbunden sind.
+Jeder Zombie, der einer Spielerfigur während der Bewegung begegnet muss bekämpft werden, bevor die Bewegung fortgesetzt werden darf.
+Betritt eine Spielfigur ein Feld mit Lebens- und Munitionsmarken, dann werden diese automatisch eingesammelt, aber erst nachdem der dort eventuell vorhandene Zombie bekämpft wurde.
+
+Bewegung (Zombiebewegung)
+Am Ende eines Zuges würfelt der Spieler wieder einen sechsseitigen Würfel und bewegt die entsprechende Anzahl an Zombies, sofern möglich, um je ein Feld.
+Diagonale Bewegung ist nicht erlaubt.
+Zombies dürfen sich (wie Spieler) nur auf Straßen oder in Gebäuden bewegen und dürfen nur Übergänge nutzen, die durch eine helle, weiße Linie miteinander verbunden sind.
+Statt drei Zombies zu bewegen, darf auch ein neuer Zombie in ein beliebiges Gebäude gesetzt werden. Bei einer 6 können also zwei Zombies in Gebäude gesetzt werden, es darf sich dann aber kein Zombie mehr bewegen.
+Zombies (wie Spielfiguren) dürfen Gebäude nur durch gekennzeichnete Türen betreten und verlassen.
+Es dürfen niemals zwei Zombies auf einem Feld stehen.
+Felder, auf denen sich ein Zombie befindet, dürfen gleichzeitig auch eine Lebens- oder Munitionsmarke enthalten. Wenn sich der Zombie bewegt, dann bleibt diese Marke liegen.
+
+Zombietötungen (Punktzahl)
+Für jede Zombietötung bekommt ein Spieler einen Punkt gutgeschrieben.
+Der Spieler benötigt 20 Zombietötungen, um das Spiel sofort zu gewinnen.
+Verliert der Spieler und muss von vorne beginnen, dann werden ihm 5 Punkte abgezogen, dabei fällt er aber nicht unter 0.
+
+Weitere Regeln und Klarstellungen
+Der Hubschrauberlandeplatz wird vom aktuellen Spieler gelegt (nicht wie im Original von dem Spieler mit der kleinsten Punktzahl).
+Kein Spieler darf mehr als 5 Lebensmarken haben. Betritt ein Spieler mit 5 Lebensmarken ein Feld mit einer Lebensmarke, so bleibt diese dort liegen, bis ein anderer Spieler sie aufsammelt.
+Spieler dürfen so viel Munition besitzen, wie sie sammeln können.
+Die Punktzahl eines Spielers (also seine Zombietötungen) sind stets für alle Mitspieler sichtbar.
+

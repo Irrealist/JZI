@@ -1,0 +1,65 @@
+*/Menu
+JZI
+Spiel
+Sprache
+Laden...
+Speichern...
+Spielregeln anzeigen...
+Aufgeben
+Aktuelles Spiel beenden
+Programm beenden
+Deutsch
+English
+----------
+*/MainMenu
+Starte ein Spiel
+Koop-Modus
+Laden
+Beenden
+----------
+*/AddPlayerMenu
+Zurück
+Gewinnschwelle
+Wiederbelebungen
+Zombifizierung
+Hardcore
+Anfangsmunition
+Spieler hinzufügen
+Starte Spiel
+----------
+*/GameMenu
+Würfeln
+Teil ziehen
+Links drehen
+Rechts drehen
+Fortsetzten
+Zombie bewegen
+Zombie platzieren
+Platzieren
+Wiederbelebungen
+Benutzte
+Munition
+Leben nutzen
+----------
+*/Table
+Name
+Farbe
+Wiederbel.
+----------
+*/States
+Teil
+Spieler
+Kampf
+Zombie
+----------
+*/LoseMenu
+Du hast verloren!
+Die Zombies verschlingen eure Gehirne...
+Zurück zum Hauptmenü
+----------
+*/WinMenu
+Du hast gewonnen!
+Herzlichen Glückwunsch
+, du hast gewonnen!
+Zurück zum Hauptmenü
+Ihr habt gewonnen!
