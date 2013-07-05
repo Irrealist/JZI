@@ -98,4 +98,16 @@ public class MapStub implements IMap {
     public void setField(IField field) {
         this.field = field;
     }
+
+	@Override
+	public boolean checkTileRotations(ICoordinates coord, ITile tile) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public LinkedList<ICoordinates> getEmptyTiles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
