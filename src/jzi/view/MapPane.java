@@ -539,6 +539,10 @@ public class MapPane extends JPanel {
 		 *            corresponding mouse event
 		 */
 		public void mouseMoved(MouseEvent e) {
+			if (at == null) {
+				return;
+			}
+
 			// transform new point into map coordinates
 			try {
 				mouseCoords = Coordinates.tileFromPoint(at.inverseTransform(
