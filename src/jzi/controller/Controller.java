@@ -39,7 +39,7 @@ import jzi.model.Player;
 import jzi.model.map.Coordinates;
 import jzi.model.map.ITile;
 import jzi.view.Action;
-import jzi.view.AddPlayerMenu;
+import jzi.view.SetupMenu;
 import jzi.view.DieGraphic;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
@@ -374,7 +374,7 @@ public class Controller implements IController {
             game = new Game(new LinkedList<>(parser.returnTileList()));
             game.setWindow(window);
             game.addObserver((Observer) window);
-            window.setMenu(new AddPlayerMenu(window, game));
+            window.setMenu(new SetupMenu(window, game));
         }
     }
 
@@ -390,7 +390,7 @@ public class Controller implements IController {
             game = new GameCoop(new LinkedList<>(parser.returnTileList()));
             game.setWindow(window);
             game.addObserver((Observer) window);
-            window.setMenu(new AddPlayerMenu(window, game));
+            window.setMenu(new SetupMenu(window, game));
         }
     }
 
@@ -408,7 +408,7 @@ public class Controller implements IController {
     }
 
     /**
-     * ActionListener for the {@link AddPlayerMenu} back button.
+     * ActionListener for the {@link SetupMenu} back button.
      * 
      * @author Buddy Jonte
      * 
@@ -421,14 +421,14 @@ public class Controller implements IController {
     }
 
     /**
-     * ActionListener for the {@link AddPlayerMenu} play button.
+     * ActionListener for the {@link SetupMenu} play button.
      * 
      * @author Buddy Jonte
      */
     class StartAction implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            AddPlayerMenu menu = (AddPlayerMenu) window.getMenu();
+            SetupMenu menu = (SetupMenu) window.getMenu();
 
             // Set game parameters according to GUI values
             game.setZombification(menu.getZombificationBox().isSelected());
@@ -459,7 +459,7 @@ public class Controller implements IController {
     }
 
     /**
-     * ActionListener for the {@link AddPlayerMenu} "Add Player" button.
+     * ActionListener for the {@link SetupMenu} "Add Player" button.
      * 
      * @author Buddy Jonte
      * 
@@ -467,7 +467,7 @@ public class Controller implements IController {
     class AddPlayerAction implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            AddPlayerMenu menu = (AddPlayerMenu) window.getMenu();
+            SetupMenu menu = (SetupMenu) window.getMenu();
             String name = menu.getNameField().getText();
             Color color = menu.getColorElement().getCurrentColor();
             IPlayer player = new Player(name, color);
@@ -613,7 +613,7 @@ public class Controller implements IController {
     }
 
     /**
-     * ActionListener/DocumentListener for the {@link AddPlayerMenu}.
+     * ActionListener/DocumentListener for the {@link SetupMenu}.
      * 
      * @author Bud
      * 
@@ -622,7 +622,7 @@ public class Controller implements IController {
 
         @Override
         public void actionPerformed(final ActionEvent arg0) {
-            AddPlayerMenu menu = (AddPlayerMenu) window.getMenu();
+            SetupMenu menu = (SetupMenu) window.getMenu();
             String name = menu.getNameField().getText();
             Color color = menu.getColorElement().getCurrentColor();
 
@@ -636,7 +636,7 @@ public class Controller implements IController {
 
         @Override
         public void insertUpdate(final DocumentEvent arg0) {
-            AddPlayerMenu menu = (AddPlayerMenu) window.getMenu();
+            SetupMenu menu = (SetupMenu) window.getMenu();
             String name = menu.getNameField().getText();
             Color color = menu.getColorElement().getCurrentColor();
 

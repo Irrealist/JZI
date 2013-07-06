@@ -13,7 +13,7 @@ import jzi.model.GameCoop;
 import jzi.model.GameStub;
 import jzi.model.IGame;
 import jzi.model.map.ITileType;
-import jzi.view.AddPlayerMenu;
+import jzi.view.SetupMenu;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
 import jzi.view.MainMenu;
@@ -116,14 +116,14 @@ public class ControllerTest {
      */
     @Test
     public void testStart() {
-        window.setMenu(new AddPlayerMenu(window, controller.getGame()));
+        window.setMenu(new SetupMenu(window, controller.getGame()));
         controller.setGame(new GameStub());
         controller.new StartAction().actionPerformed(null);
 
         assertTrue(window.getMenu() instanceof GameMenu);
 
         // Test with coop game, too
-        window.setMenu(new AddPlayerMenu(window, controller.getGame()));
+        window.setMenu(new SetupMenu(window, controller.getGame()));
         controller.setGame(new GameStub(true));
         controller.new StartAction().actionPerformed(null);
 
@@ -137,7 +137,7 @@ public class ControllerTest {
     public void testAddPlayer() {
         GameStub game = new GameStub();
 
-        window.setMenu(new AddPlayerMenu(window, controller.getGame()));
+        window.setMenu(new SetupMenu(window, controller.getGame()));
 
         controller.setGame(game);
         controller.new AddPlayerAction().actionPerformed(null);
