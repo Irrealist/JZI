@@ -127,18 +127,8 @@ public class ZombieState implements IState {
 	public final void rollAction() {
 		game.getCurrentPlayer().setZombies(game.getDie());
 		game.getCurrentPlayer().setRolledZombie(true);
-		menu.getMoveZombieButton().setEnabled(true);
 
-		if (game.getDie() >= Game.ZOMBIE_PLACE_COST) {
-			menu.getPlaceZombieButton().setEnabled(true);
-		} else {
-			mode = ZombieMode.Move;
-			menu.getMoveZombieButton().setSelected(true);
-		}
-
-		if (game.getMap().getEmptyBuildings().isEmpty()) {
-			menu.getPlaceZombieButton().setEnabled(false);
-		}
+		updateMode();
 	}
 
 	/**
@@ -173,6 +163,8 @@ public class ZombieState implements IState {
 		} else if (mode.equals(ZombieMode.Place)) {
 			game.placeZombie(field);
 		}
+		
+		updateMode();
 
 		menu.getDie().setIcon(DieGraphic.getDiefromInt(player.getZombies()));
 
@@ -228,5 +220,34 @@ public class ZombieState implements IState {
 	@Override
 	public void drawAction() {
 		// no tile drawing in this state
+	}
+
+	private void updateMode() {
+		boolean canMove = false;
+
+		menu.getMoveZombieButton().setEnabled(true);
+		menu.getPlaceZombieButton().setEnabled(true);
+
+		if (game.getCurrentPlayer().getZombies() >= Game.ZOMBIE_PLACE_COST) {
+			menu.getPlaceZombieButton().setEnabled(true);
+		} else {
+			mode = ZombieMode.Move;
+			menu.getMoveZombieButton().setSelected(true);
+		}
+
+		if (game.getMap().getEmptyBuildings().isEmpty()) {
+			menu.getPlaceZombieButton().setEnabled(false);
+		}
+
+		for (IZombie zombie : game.getZombies()) {
+			if (game.canZombieMove(zombie)) {
+				canMove = true;
+				break;
+			}
+		}
+
+		if (!canMove) {
+			continueAction();
+		}
 	}
 }
