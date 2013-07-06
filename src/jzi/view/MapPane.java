@@ -7,6 +7,7 @@ import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -100,6 +101,8 @@ public class MapPane extends JPanel {
 	 * Last clicked point.
 	 */
 	private Point2D lastClicked;
+	private Point2D mouseDevicePos;
+	private Point2D mouseUserPos;
 	/**
 	 * Field coordinates that the mouse is currently hovering over.
 	 */
@@ -125,6 +128,8 @@ public class MapPane extends JPanel {
 		this.ammoImage = ammoImage;
 		this.lifeImage = lifeImage;
 		this.zombieImage = zombieImage;
+
+		mouseUserPos = new Point(getWidth() / 2, getHeight() / 2);
 
 		try {
 			AffineTransform scaleTransform = new AffineTransform();
@@ -232,7 +237,7 @@ public class MapPane extends JPanel {
 		translateX = -tile.getX() * Tile.TILE_SIZE - (field.getX() - 1)
 				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
 		translateY = -tile.getY() * Tile.TILE_SIZE - (field.getY() - 1)
-				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
+				* Field.FIELD_SIZE;
 	}
 
 	/**
@@ -600,6 +605,8 @@ public class MapPane extends JPanel {
 		 *            corresponding mouse event
 		 */
 		public void mouseExited(MouseEvent e) {
+			mouseDevicePos = new Point(0, 0);
+			mouseUserPos = new Point(0, 0);
 			mouseCoords = null;
 			repaint();
 		}
@@ -616,10 +623,12 @@ public class MapPane extends JPanel {
 				return;
 			}
 
+			mouseDevicePos = e.getPoint();
+
 			// transform new point into map coordinates
 			try {
-				mouseCoords = Coordinates.tileFromPoint(at.inverseTransform(
-						e.getPoint(), null));
+				at.inverseTransform(mouseDevicePos, mouseUserPos);
+				mouseCoords = Coordinates.tileFromPoint(mouseUserPos);
 			} catch (NoninvertibleTransformException te) {
 				return;
 			}
