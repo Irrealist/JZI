@@ -192,7 +192,7 @@ public class MapPane extends JPanel {
 
 		// paint all tiles
 		for (ITile tile : game.getMap().getTiles()) {
-			paintTile(graphics, tile);
+			paintTile(graphics, tile, tile.getCoordinates());
 		}
 
 		// paint empty spots
@@ -270,8 +270,7 @@ public class MapPane extends JPanel {
 	 * @param tile
 	 *            tile to be painted
 	 */
-	private void paintTile(Graphics2D graphics, ITile tile) {
-		ICoordinates coords = tile.getCoordinates();
+	private void paintTile(Graphics2D graphics, ITile tile, ICoordinates coords) {
 		BufferedImage image = TileGraphic.getRenderImage(tile);
 
 		// draw the tile image
@@ -352,8 +351,7 @@ public class MapPane extends JPanel {
 					AlphaComposite.SRC_OVER, 0.25f));
 		}
 
-		graphics.drawImage(TileGraphic.getRenderImage(tile), mouseCoords.getX()
-				* Tile.TILE_SIZE, mouseCoords.getY() * Tile.TILE_SIZE, null);
+		paintTile(graphics, tile, mouseCoords);
 
 		graphics.setComposite(comp);
 	}
