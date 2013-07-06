@@ -183,10 +183,9 @@ public class ZombieState implements IState {
 			mode = ZombieMode.Move;
 		}
 
-		// If last zombie: End of round, next player
+		// If last zombie: continue
 		if (player.getZombies() == 0) {
-			game.nextPlayer();
-			game.setState(new TileState(window));
+			continueAction();
 		}
 	}
 
