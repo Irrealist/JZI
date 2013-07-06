@@ -35,6 +35,7 @@ import jzi.model.IGame;
 import jzi.model.IPlayer;
 import jzi.model.IZombie;
 import jzi.model.SuperZombie;
+import jzi.model.Zombie;
 import jzi.model.map.Coordinates;
 import jzi.model.map.Field;
 import jzi.model.map.ICoordinates;
@@ -210,8 +211,8 @@ public class MapPane extends JPanel {
 			}
 		}
 
-		// paint all zombies
-		paintZombies(graphics);
+		// paint current zombie
+		paintCurrentZombie(graphics);
 
 		// paint all players
 		paintPlayers(graphics);
@@ -266,6 +267,9 @@ public class MapPane extends JPanel {
 	 */
 	private void paintTile(Graphics2D graphics, ITile tile, ICoordinates coords) {
 		BufferedImage image = TileGraphic.getRenderImage(tile);
+		Composite comp = graphics.getComposite();
+		AlphaComposite alpha = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.25f);
 
 		// draw the tile image
 		drawImage(graphics, image, coords.toField());
@@ -274,10 +278,24 @@ public class MapPane extends JPanel {
 		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
 			for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
 				IField field = tile.getField(y, x);
+				IZombie zombie = field.getZombie();
+
+				// highlight movable zombies
+				if (game.getCurrentState() instanceof ZombieState
+						&& game.getCurrentPlayer().hasRolledZombie()) {
+					if (((ZombieState) game.getCurrentState()).getZombieMode()
+							.equals(ZombieMode.Move)
+							&& game.canZombieMove(zombie)) {
+						graphics.setComposite(alpha);
+						graphics.setColor(Color.GREEN);
+
+						fillSquare(graphics, coords.toField().add(new Coordinates(x, y)), Field.FIELD_SIZE);
+
+						graphics.setComposite(comp);
+					}
+				}
 
 				// draw ammunition
-				// multiply tile coordinates by tile size, and field coordinates
-				// by field size
 				if (field.hasAmmo()) {
 					drawImage(graphics, ammoImage,
 							coords.toField().add(new Coordinates(x, y)));
@@ -286,6 +304,18 @@ public class MapPane extends JPanel {
 				// draw life points
 				if (field.hasLife()) {
 					drawImage(graphics, lifeImage,
+							coords.toField().add(new Coordinates(x, y)));
+				}
+
+				// draw zombie if there is one
+				if (zombie instanceof Zombie) {
+					drawImage(graphics, zombieImage,
+							coords.toField().add(new Coordinates(x, y)));
+				}
+
+				// draw super zombie if there is one
+				if (zombie instanceof SuperZombie) {
+					drawImage(graphics, superZombieImage,
 							coords.toField().add(new Coordinates(x, y)));
 				}
 			}
@@ -350,36 +380,7 @@ public class MapPane extends JPanel {
 	 * @param graphics
 	 *            graphics object that handles the painting
 	 */
-	private void paintZombies(Graphics2D graphics) {
-		Composite comp = graphics.getComposite();
-		AlphaComposite alpha = AlphaComposite.getInstance(
-				AlphaComposite.SRC_OVER, 0.25f);
-
-		// iterate through zombies
-		for (IZombie zombie : game.getZombies()) {
-			ICoordinates coords = zombie.getCoordinates();
-
-			if (game.getCurrentState() instanceof ZombieState
-					&& game.getCurrentPlayer().hasRolledZombie()) {
-				if (((ZombieState) game.getCurrentState()).getZombieMode()
-						.equals(ZombieMode.Move) && game.canZombieMove(zombie)) {
-					graphics.setComposite(alpha);
-					graphics.setColor(Color.GREEN);
-
-					fillSquare(graphics, coords, Field.FIELD_SIZE);
-
-					graphics.setComposite(comp);
-				}
-			}
-
-			// check type of zombie and draw according image
-			if (zombie instanceof SuperZombie) {
-				drawImage(graphics, superZombieImage, coords);
-			} else {
-				drawImage(graphics, zombieImage, coords);
-			}
-		}
-
+	private void paintCurrentZombie(Graphics2D graphics) {
 		// draw a border around the current zombie if there is one
 		if (game.getCurrentZombie() != null) {
 			ICoordinates coords = game.getCurrentZombie().getCoordinates();
@@ -471,9 +472,9 @@ public class MapPane extends JPanel {
 		ICoordinates tile = coords.toTile();
 		ICoordinates field = coords.toRelativeField();
 
-		graphics.drawImage(image, tile.getX() * Tile.TILE_SIZE
-				+ field.getX() * Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE
-				+ field.getY() * Field.FIELD_SIZE, null);
+		graphics.drawImage(image, tile.getX() * Tile.TILE_SIZE + field.getX()
+				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
+				* Field.FIELD_SIZE, null);
 	}
 
 	/**

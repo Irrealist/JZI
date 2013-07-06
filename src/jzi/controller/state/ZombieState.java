@@ -233,9 +233,12 @@ public class ZombieState implements IState {
 		} else {
 			mode = ZombieMode.Move;
 			menu.getMoveZombieButton().setSelected(true);
+			menu.getPlaceZombieButton().setEnabled(false);
 		}
 
 		if (game.getMap().getEmptyBuildings().isEmpty()) {
+			mode = ZombieMode.Move;
+			menu.getMoveZombieButton().setSelected(true);
 			menu.getPlaceZombieButton().setEnabled(false);
 		}
 
