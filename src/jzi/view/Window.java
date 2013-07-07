@@ -8,7 +8,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentListener;
 
 import java.awt.Dimension;
-import java.awt.Event;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -76,8 +76,8 @@ public class Window extends JFrame implements Observer, IWindow {
 		gameSurrender = new JMenuItem();
 		gameQuit = new JMenuItem();
 
-		jziQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-				Event.CTRL_MASK));
+		jziQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask()));
 
 		jziMenu.add(jziRules);
 		jziMenu.add(jziQuit);
