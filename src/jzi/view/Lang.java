@@ -9,9 +9,9 @@ public class Lang {
 
 	public static void load(String name) {
 		try {
-			lang.load(new FileInputStream("lang/" + name + ".properties"));
+			lang.load(new FileInputStream("data/lang/" + name));
 		} catch (IOException e) {
-
+			System.err.println("Could not load language " + name);
 		}
 	}
 
