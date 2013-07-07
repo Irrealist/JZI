@@ -5,6 +5,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.DocumentListener;
 
 import java.awt.Dimension;
@@ -52,6 +54,22 @@ public class Window extends JFrame implements Observer, IWindow {
 	 */
 	public Window() {
 		File[] languages;
+
+		try {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty(
+					"com.apple.mrj.application.apple.menu.about.name", "Test");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: " + e.getMessage());
+		} catch (InstantiationException e) {
+			System.out.println("InstantiationException: " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			System.out.println("IllegalAccessException: " + e.getMessage());
+		} catch (UnsupportedLookAndFeelException e) {
+			System.out.println("UnsupportedLookAndFeelException: "
+					+ e.getMessage());
+		}
 
 		setTitle("Java Zombie Invasion");
 		setSize(new Dimension(1000, 800));
