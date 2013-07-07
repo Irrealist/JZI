@@ -38,8 +38,10 @@ import jzi.model.IZombie;
 import jzi.model.SuperZombie;
 import jzi.model.Zombie;
 import jzi.model.map.Coordinates;
+import jzi.model.map.Direction;
 import jzi.model.map.Field;
 import jzi.model.map.ICoordinates;
+import jzi.model.map.IDirection;
 import jzi.model.map.IField;
 import jzi.model.map.ITile;
 import jzi.model.map.Tile;
@@ -204,14 +206,6 @@ public class MapPane extends JPanel {
 			paintCurrentTile(graphics);
 		}
 
-		if (game.getCurrentState() instanceof ZombieState
-				&& game.getCurrentPlayer().hasRolledZombie()) {
-			if (((ZombieState) game.getCurrentState()).getZombieMode().equals(
-					ZombieMode.Place)) {
-				paintEmptyBuildings(graphics);
-			}
-		}
-
 		// paint current zombie
 		paintCurrentZombie(graphics);
 
@@ -236,26 +230,6 @@ public class MapPane extends JPanel {
 				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
 		translateY = -tile.getY() * Tile.TILE_SIZE - (field.getY() - 1)
 				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
-	}
-
-	/**
-	 * Highlights all empty building fields.
-	 * 
-	 * @param graphics
-	 *            graphics object to paint onto
-	 */
-	private void paintEmptyBuildings(Graphics2D graphics) {
-		Composite comp = graphics.getComposite();
-
-		graphics.setComposite(AlphaComposite.getInstance(
-				AlphaComposite.SRC_OVER, 0.25f));
-		graphics.setColor(Color.GREEN);
-
-		for (ICoordinates coords : game.getMap().getEmptyBuildings()) {
-			fillSquare(graphics, coords, Field.FIELD_SIZE);
-		}
-
-		graphics.setComposite(comp);
 	}
 
 	/**
@@ -284,34 +258,9 @@ public class MapPane extends JPanel {
 	private void paintField(Graphics2D graphics, IField field,
 			ICoordinates coords) {
 		Composite comp = graphics.getComposite();
-		AlphaComposite highlightAlpha = AlphaComposite.getInstance(
-				AlphaComposite.SRC_OVER, 0.25f);
-		AlphaComposite fightAlpha = AlphaComposite.getInstance(
-				AlphaComposite.SRC_OVER, 0.5f);
+		AlphaComposite dimAlpha = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.6f);
 		IZombie zombie = field.getZombie();
-
-		if (game.getCurrentState() instanceof FightState
-				&& !coords.equals(game.getCurrentPlayer().getCoordinates())) {
-			graphics.setComposite(fightAlpha);
-			graphics.setColor(Color.black);
-			fillRect(graphics, coords, Field.FIELD_SIZE, Field.FIELD_SIZE);
-			graphics.setComposite(comp);
-		}
-
-		// highlight movable zombies
-		if (game.getCurrentState() instanceof ZombieState
-				&& game.getCurrentPlayer().hasRolledZombie()) {
-			if (((ZombieState) game.getCurrentState()).getZombieMode().equals(
-					ZombieMode.Move)
-					&& game.canZombieMove(zombie)) {
-				graphics.setComposite(highlightAlpha);
-				graphics.setColor(Color.GREEN);
-
-				fillSquare(graphics, coords, Field.FIELD_SIZE);
-
-				graphics.setComposite(comp);
-			}
-		}
 
 		// draw ammunition
 		if (field.hasAmmo()) {
@@ -323,14 +272,77 @@ public class MapPane extends JPanel {
 			drawImage(graphics, lifeImage, coords);
 		}
 
-		// draw zombie if there is one
-		if (zombie instanceof Zombie) {
-			drawImage(graphics, zombieImage, coords);
+		if (game.getCurrentState() instanceof FightState
+				&& !coords.equals(game.getCurrentPlayer().getCoordinates())) {
+			graphics.setComposite(dimAlpha);
+			graphics.setColor(Color.black);
+			fillRect(graphics, coords, Field.FIELD_SIZE, Field.FIELD_SIZE);
+			graphics.setComposite(comp);
+		}
+		
+		if (!game.canZombieMove(zombie)) {
+			// draw zombie if there is one
+			if (zombie instanceof Zombie) {
+				drawImage(graphics, zombieImage, coords);
+			}
+	
+			// draw super zombie if there is one
+			if (zombie instanceof SuperZombie) {
+				drawImage(graphics, superZombieImage, coords);
+			}
 		}
 
-		// draw super zombie if there is one
-		if (zombie instanceof SuperZombie) {
-			drawImage(graphics, superZombieImage, coords);
+		// highlight movable zombies
+		if (game.getCurrentState() instanceof ZombieState
+				&& game.getCurrentPlayer().hasRolledZombie()) {
+			ZombieMode mode = ((ZombieState) game.getCurrentState())
+					.getZombieMode();
+			IZombie current = game.getCurrentZombie();
+			boolean neighbor = false;
+
+			if (current != null) {
+				for (IDirection dir : Direction.values()) {
+					IField next = game.getMap().getField(coords.getDir(dir));
+
+					if (field.hasDir(dir) && next != null && zombie == null
+							&& current.equals(next.getZombie())) {
+						neighbor = true;
+					}
+				}
+			}
+
+			if (mode.equals(ZombieMode.Move)
+					&& (!game.canZombieMove(zombie) || (current != null && !current
+							.equals(zombie))) && !neighbor) {
+				graphics.setComposite(dimAlpha);
+				graphics.setColor(Color.black);
+
+				fillSquare(graphics, coords, Field.FIELD_SIZE);
+
+				graphics.setComposite(comp);
+			}
+
+			if (mode.equals(ZombieMode.Place)
+					&& (zombie != null || !field.getType().equals("building"))) {
+				graphics.setComposite(dimAlpha);
+				graphics.setColor(Color.black);
+
+				fillSquare(graphics, coords, Field.FIELD_SIZE);
+
+				graphics.setComposite(comp);
+			}
+		}
+		
+		if (game.canZombieMove(zombie)) {
+			// draw zombie if there is one
+			if (zombie instanceof Zombie) {
+				drawImage(graphics, zombieImage, coords);
+			}
+	
+			// draw super zombie if there is one
+			if (zombie instanceof SuperZombie) {
+				drawImage(graphics, superZombieImage, coords);
+			}
 		}
 	}
 
