@@ -67,8 +67,8 @@ public class LoseMenu extends JPanel implements Menu {
     }
     
     private void setText() {
-    	text.setText(Lang.get("lose.msg"));
-    	back.setText(Lang.get("lose.back"));
+    	text.setText(Language.get("lose.msg"));
+    	back.setText(Language.get("lose.back"));
     }
 
     @Override

@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Lang {
+public class Language {
 	private static Properties lang = new Properties();
 
 	public static void load(String name) {

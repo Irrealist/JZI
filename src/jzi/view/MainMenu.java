@@ -50,10 +50,10 @@ public class MainMenu extends JPanel implements Menu {
 	}
 
 	private void setText() {
-		start.setText(Lang.get("main.normal"));
-		coop.setText(Lang.get("main.coop"));
-		load.setText(Lang.get("main.load"));
-		quit.setText(Lang.get("main.quit"));
+		start.setText(Language.get("main.normal"));
+		coop.setText(Language.get("main.coop"));
+		load.setText(Language.get("main.load"));
+		quit.setText(Language.get("main.quit"));
 	}
 
 	/**

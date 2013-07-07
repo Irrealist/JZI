@@ -112,12 +112,12 @@ public class WinnerMenu extends JPanel implements Menu {
 
 	private void setText() {
 		if (game instanceof GameCoop) {
-			text.setText(Lang.get("win.coop"));
+			text.setText(Language.get("win.coop"));
 		} else {
-			text.setText(Lang.get("win.normal"));
+			text.setText(Language.get("win.normal"));
 		}
 
-		back.setText(Lang.get("win.back"));
+		back.setText(Language.get("win.back"));
 	}
 
 	@Override

@@ -194,14 +194,14 @@ public class SetupMenu extends JPanel implements Menu, ActionListener {
 	}
 
 	private void setText() {
-		back.setText(Lang.get("setup.back"));
-		thresholdLabel.setText(Lang.get("setup.wins"));
-		revivesLabel.setText(Lang.get("setup.revives"));
-		zombification.setText(Lang.get("setup.zombification"));
-		hardcore.setText(Lang.get("setup.hardcore"));
-		ammoLabel.setText(Lang.get("setup.ammo"));
-		addPlayer.setText(Lang.get("setup.add"));
-		play.setText(Lang.get("setup.start"));
+		back.setText(Language.get("setup.back"));
+		thresholdLabel.setText(Language.get("setup.wins"));
+		revivesLabel.setText(Language.get("setup.revives"));
+		zombification.setText(Language.get("setup.zombification"));
+		hardcore.setText(Language.get("setup.hardcore"));
+		ammoLabel.setText(Language.get("setup.ammo"));
+		addPlayer.setText(Language.get("setup.add"));
+		play.setText(Language.get("setup.start"));
 	}
 	
 	/**

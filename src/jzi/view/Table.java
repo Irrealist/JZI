@@ -101,12 +101,12 @@ public class Table extends JTable {
 		TableColumn tc = tcm.getColumn(0);
 		TableColumn tc2 = tcm.getColumn(1);
 
-		tc.setHeaderValue(Lang.get("game.player.name"));
-		tc2.setHeaderValue(Lang.get("game.player.color"));
+		tc.setHeaderValue(Language.get("game.player.name"));
+		tc2.setHeaderValue(Language.get("game.player.color"));
 
 		if (game.isHardcore()) {
 			TableColumn tc3 = tcm.getColumn(5);
-			tc3.setHeaderValue(Lang.get("game.player.revives"));
+			tc3.setHeaderValue(Language.get("game.player.revives"));
 
 		}
 

@@ -92,13 +92,13 @@ public class Window extends JFrame implements Observer, IWindow {
 		for (final File l : languages) {
 			JMenuItem langItem = new JMenuItem();
 
-			Lang.load(l.getName());
+			Language.load(l.getName());
 
-			langItem.setText(Lang.get("language.name"));
+			langItem.setText(Language.get("language.name"));
 			langItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Lang.load(l.getName());
+					Language.load(l.getName());
 					update(null, Update.ChangeLanguage);
 				}
 			});
@@ -106,7 +106,7 @@ public class Window extends JFrame implements Observer, IWindow {
 			languageMenu.add(langItem);
 		}
 
-		Lang.load("en.properties");
+		Language.load("en.properties");
 
 		gameSave.setEnabled(false);
 		gameSurrender.setEnabled(false);
@@ -118,17 +118,17 @@ public class Window extends JFrame implements Observer, IWindow {
 	}
 
 	private void setText() {
-		jziMenu.setText(Lang.get("menu.jzi.title"));
-		jziRules.setText(Lang.get("menu.jzi.rules"));
-		jziQuit.setText(Lang.get("menu.jzi.quit"));
+		jziMenu.setText(Language.get("menu.jzi.title"));
+		jziRules.setText(Language.get("menu.jzi.rules"));
+		jziQuit.setText(Language.get("menu.jzi.quit"));
 
-		gameMenu.setText(Lang.get("menu.game.title"));
-		gameLoad.setText(Lang.get("menu.game.load"));
-		gameSave.setText(Lang.get("menu.game.save"));
-		gameSurrender.setText(Lang.get("menu.game.surrender"));
-		gameQuit.setText(Lang.get("menu.game.quit"));
+		gameMenu.setText(Language.get("menu.game.title"));
+		gameLoad.setText(Language.get("menu.game.load"));
+		gameSave.setText(Language.get("menu.game.save"));
+		gameSurrender.setText(Language.get("menu.game.surrender"));
+		gameQuit.setText(Language.get("menu.game.quit"));
 
-		languageMenu.setText(Lang.get("menu.lang.title"));
+		languageMenu.setText(Language.get("menu.lang.title"));
 	}
 
 	/**

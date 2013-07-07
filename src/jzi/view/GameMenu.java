@@ -409,16 +409,16 @@ public class GameMenu implements Menu {
 	 */
 	private void createTable() {
 		if (game.isHardcore()) {
-			Object[] columnNames = { Lang.get("game.player.name"),
-					Lang.get("game.player.color"), "", "", "",
-					Lang.get("game.player.revives") };
+			Object[] columnNames = { Language.get("game.player.name"),
+					Language.get("game.player.color"), "", "", "",
+					Language.get("game.player.revives") };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
 					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
 					game);
 
 		} else {
-			Object[] columnNames = { Lang.get("game.player.name"),
-					Lang.get("game.player.color"), "", "", "" };
+			Object[] columnNames = { Language.get("game.player.name"),
+					Language.get("game.player.color"), "", "", "" };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
 					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
 					game);
@@ -560,7 +560,7 @@ public class GameMenu implements Menu {
 		}
 
 		if (game.isHardcore()) {
-			revives.setText(String.format(Lang.get("game.revives"),
+			revives.setText(String.format(Language.get("game.revives"),
 					game.getRevives() - player.getRevives()));
 		}
 
@@ -622,7 +622,7 @@ public class GameMenu implements Menu {
 			IState current = ((Game) o).getCurrentState();
 
 			if (current instanceof TileState) {
-				state.setText(Lang.get("game.mode.tile"));
+				state.setText(Language.get("game.mode.tile"));
 				tilePanel.setVisible(true);
 				rollPanel.setVisible(false);
 				fightPanel.setVisible(false);
@@ -631,7 +631,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof PlayerState) {
-				state.setText(Lang.get("game.mode.move"));
+				state.setText(Language.get("game.mode.move"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
@@ -640,7 +640,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof FightState) {
-				state.setText(Lang.get("game.mode.fight"));
+				state.setText(Language.get("game.mode.fight"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				game.update(Update.PlayerAttributeUpdate);
@@ -650,7 +650,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof ZombieState) {
-				state.setText(Lang.get("game.mode.zombie"));
+				state.setText(Language.get("game.mode.zombie"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
@@ -832,9 +832,9 @@ public class GameMenu implements Menu {
 	private void showFightButtons(Game game) {
 		ammoDelta = game.getDieDifference();
 
-		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
 		useAmmo.setEnabled(false);
-		useLife.setText(Lang.get("game.fight.life"));
+		useLife.setText(Language.get("game.fight.life"));
 		useLife.setEnabled(true);
 		fightPanel.setVisible(true);
 	}
@@ -859,8 +859,8 @@ public class GameMenu implements Menu {
 	private void updateFightPanel(Game game) {
 		ammoDelta = game.getDieDifference();
 
-		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
-		useLife.setText(Lang.get("game.fight.life"));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
+		useLife.setText(Language.get("game.fight.life"));
 	}
 
 	/**
@@ -894,15 +894,15 @@ public class GameMenu implements Menu {
 	}
 
 	private void setText() {
-		rollDie.setText(Lang.get("game.roll"));
-		drawTile.setText(Lang.get("game.draw"));
+		rollDie.setText(Language.get("game.roll"));
+		drawTile.setText(Language.get("game.draw"));
 		allPlayerTable.changeLanguage();
-		rotateLeft.setText(Lang.get("game.rotate.left"));
-		rotateRight.setText(Lang.get("game.rotate.right"));
-		cont.setText(Lang.get("game.continue"));
-		moveZombie.setText(Lang.get("game.zombie.move"));
-		placeZombie.setText(Lang.get("game.zombie.place"));
-		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
-		useLife.setText(Lang.get("game.fight.life"));
+		rotateLeft.setText(Language.get("game.rotate.left"));
+		rotateRight.setText(Language.get("game.rotate.right"));
+		cont.setText(Language.get("game.continue"));
+		moveZombie.setText(Language.get("game.zombie.move"));
+		placeZombie.setText(Language.get("game.zombie.place"));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
+		useLife.setText(Language.get("game.fight.life"));
 	}
 }
