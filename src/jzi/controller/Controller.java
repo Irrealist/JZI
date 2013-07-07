@@ -43,7 +43,6 @@ import jzi.view.SetupMenu;
 import jzi.view.DieGraphic;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
-import jzi.view.Language;
 import jzi.view.MainMenu;
 import jzi.view.Update;
 import jzi.view.Window;
@@ -169,8 +168,6 @@ public class Controller implements IController {
         actionMap.put(Action.Load, new LoadAction());
         actionMap.put(Action.useAmmo, new UseAmmoAction());
         actionMap.put(Action.useLife, new UseLifeAction());
-        actionMap.put(Action.toEnglish, new ToEnglishAction());
-        actionMap.put(Action.toGerman, new ToGermanAction());
     }
 
     /**
@@ -697,36 +694,6 @@ public class Controller implements IController {
                 game.update(Update.FightPanelUpdate);
                 game.update(Update.DisableFightPanel);
             }
-        }
-    }
-
-    /**
-     * Handles changing the language to English.
-     * 
-     * @author Tobias Groth
-     * 
-     */
-    class ToEnglishAction implements ActionListener {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            Language.set(Language.english);
-            window.update(null, Update.ChangeLanguage);
-
-        }
-    }
-
-    /**
-     * Handles changing the language to German.
-     * 
-     * @author Tobias Groth
-     * 
-     */
-    class ToGermanAction implements ActionListener {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            Language.set(Language.german);
-
-            window.update(null, Update.ChangeLanguage);
         }
     }
 

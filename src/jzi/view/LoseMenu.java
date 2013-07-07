@@ -3,7 +3,6 @@ package jzi.view;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -28,10 +27,6 @@ public class LoseMenu extends JPanel implements Menu {
      */
     private IWindow window;
     /**
-     * Tile of the Menu.
-     */
-    private JLabel title;
-    /**
      * Text.
      */
     private JLabel text;
@@ -54,10 +49,9 @@ public class LoseMenu extends JPanel implements Menu {
         updateMap.put(Update.ChangeLanguage, new ChangeLanguageUpdate());
 
         setLayout(new MigLayout("align center center, wrap 1", "[center]"));
-        Iterator<String> words = Language.getCurrentLanguageWords(6).iterator();
-        title = new JLabel(words.next());
-        text = new JLabel(words.next());
-        back = new JButton(words.next());
+
+        text = new JLabel();
+        back = new JButton();
 
         back.addActionListener(new ActionListener() {
             @Override
@@ -66,9 +60,15 @@ public class LoseMenu extends JPanel implements Menu {
             }
         });
 
-        add(title);
         add(text);
         add(back);
+        
+        setText();
+    }
+    
+    private void setText() {
+    	text.setText(Lang.get("lose.msg"));
+    	back.setText(Lang.get("lose.back"));
     }
 
     @Override
@@ -86,11 +86,7 @@ public class LoseMenu extends JPanel implements Menu {
     private class ChangeLanguageUpdate implements ViewUpdate {
         @Override
         public void execute(Observable o) {
-            Iterator<String> words = Language.getCurrentLanguageWords(6)
-                    .iterator();
-            title.setText(words.next());
-            text.setText(words.next());
-            back.setText(words.next());
+            setText();
         }
     }
 

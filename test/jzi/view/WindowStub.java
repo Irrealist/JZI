@@ -82,12 +82,6 @@ public class WindowStub implements IWindow, Observer {
     }
 
     @Override
-    public void changeLanguage() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public JFrame getFrame() {
         // TODO Auto-generated method stub
         return null;

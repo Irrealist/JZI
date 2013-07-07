@@ -99,15 +99,4 @@ public enum Action {
      */
 
     useLife,
-    
-    /**
-     * Action for the "english language ..." menu item.
-     */
-    
-    toEnglish,
-    
-    /**
-     * Action for the "german language ..." menu item.
-     */
-    toGerman,
 }
