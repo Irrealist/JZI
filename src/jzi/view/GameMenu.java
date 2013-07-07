@@ -640,6 +640,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof FightState) {
+				mapPane.focus(game.getCurrentPlayer().getCoordinates());
 				state.setText(Language.get("game.mode.fight"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
@@ -832,7 +833,8 @@ public class GameMenu implements Menu {
 	private void showFightButtons(Game game) {
 		ammoDelta = game.getDieDifference();
 
-		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"),
+				ammoDelta));
 		useAmmo.setEnabled(false);
 		useLife.setText(Language.get("game.fight.life"));
 		useLife.setEnabled(true);
@@ -859,7 +861,8 @@ public class GameMenu implements Menu {
 	private void updateFightPanel(Game game) {
 		ammoDelta = game.getDieDifference();
 
-		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"),
+				ammoDelta));
 		useLife.setText(Language.get("game.fight.life"));
 	}
 
@@ -902,7 +905,8 @@ public class GameMenu implements Menu {
 		cont.setText(Language.get("game.continue"));
 		moveZombie.setText(Language.get("game.zombie.move"));
 		placeZombie.setText(Language.get("game.zombie.place"));
-		useAmmo.setText(String.format(Language.get("game.fight.ammo"), ammoDelta));
+		useAmmo.setText(String.format(Language.get("game.fight.ammo"),
+				ammoDelta));
 		useLife.setText(Language.get("game.fight.life"));
 	}
 }
