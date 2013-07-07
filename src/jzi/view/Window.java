@@ -9,11 +9,12 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.Dimension;
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.EventListener;
@@ -31,15 +32,13 @@ public class Window extends JFrame implements Observer, IWindow {
 	private JMenuBar menuBar;
 	private JMenu jziMenu;
 	private JMenu gameMenu;
-	private JMenu language;
-	private JMenuItem loadItem;
-	private JMenuItem saveItem;
-	private JMenuItem german;
-	private JMenuItem english;
-	private JMenuItem rulesItem;
-	private JMenuItem surrenderItem;
-	private JMenuItem quitItem;
-	private JMenuItem exitItem;
+	private JMenu languageMenu;
+	private JMenuItem jziRules;
+	private JMenuItem jziQuit;
+	private JMenuItem gameLoad;
+	private JMenuItem gameSave;
+	private JMenuItem gameSurrender;
+	private JMenuItem gameQuit;
 	private HashMap<Action, EventListener> actionMap;
 	/**
 	 * Menu currently being displayed.
@@ -52,6 +51,8 @@ public class Window extends JFrame implements Observer, IWindow {
 	 * @param actionMap
 	 */
 	public Window() {
+		File[] languages;
+
 		setTitle("Java Zombie Invasion");
 		setSize(new Dimension(1000, 800));
 		setMinimumSize(new Dimension(640, 480));
@@ -59,57 +60,87 @@ public class Window extends JFrame implements Observer, IWindow {
 		setLocationRelativeTo(null);
 
 		menuBar = new JMenuBar();
-		Iterator<String> words = Language.getCurrentLanguageWords(0).iterator();
-		jziMenu = new JMenu(words.next());
-		gameMenu = new JMenu(words.next());
-		language = new JMenu(words.next());
+		jziMenu = new JMenu();
+		gameMenu = new JMenu();
+		languageMenu = new JMenu();
+
 		menuBar.add(jziMenu);
 		menuBar.add(gameMenu);
-		menuBar.add(language);
+		menuBar.add(languageMenu);
 
-		loadItem = new JMenuItem(words.next());
-		saveItem = new JMenuItem(words.next());
-		rulesItem = new JMenuItem(words.next());
-		surrenderItem = new JMenuItem(words.next());
-		quitItem = new JMenuItem(words.next());
-		exitItem = new JMenuItem(words.next());
+		jziRules = new JMenuItem();
+		jziQuit = new JMenuItem();
 
-		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+		gameLoad = new JMenuItem();
+		gameSave = new JMenuItem();
+		gameSurrender = new JMenuItem();
+		gameQuit = new JMenuItem();
+
+		jziQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
 				Event.CTRL_MASK));
 
-		german = new JMenuItem(words.next());
-		english = new JMenuItem(words.next());
+		jziMenu.add(jziRules);
+		jziMenu.add(jziQuit);
 
-		jziMenu.add(rulesItem);
-		jziMenu.add(exitItem);
+		gameMenu.add(gameLoad);
+		gameMenu.add(gameSave);
+		gameMenu.add(gameSurrender);
+		gameMenu.add(gameQuit);
 
-		gameMenu.add(loadItem);
-		gameMenu.add(saveItem);
-		gameMenu.add(surrenderItem);
-		gameMenu.add(quitItem);
+		languages = new File("data/lang").listFiles();
 
-		language.add(english);
-		language.add(german);
+		for (final File l : languages) {
+			JMenuItem langItem = new JMenuItem();
 
-		saveItem.setEnabled(false);
-		surrenderItem.setEnabled(false);
-		quitItem.setEnabled(false);
+			Lang.load(l.getName());
+
+			langItem.setText(Lang.get("language.name"));
+			langItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Lang.load(l.getName());
+					update(null, Update.ChangeLanguage);
+				}
+			});
+
+			languageMenu.add(langItem);
+		}
+
+		Lang.load("en.properties");
+
+		gameSave.setEnabled(false);
+		gameSurrender.setEnabled(false);
+		gameQuit.setEnabled(false);
+
+		setText();
 
 		setJMenuBar(menuBar);
+	}
+
+	private void setText() {
+		jziMenu.setText(Lang.get("menu.jzi.title"));
+		jziRules.setText(Lang.get("menu.jzi.rules"));
+		jziQuit.setText(Lang.get("menu.jzi.quit"));
+
+		gameMenu.setText(Lang.get("menu.game.title"));
+		gameLoad.setText(Lang.get("menu.game.load"));
+		gameSave.setText(Lang.get("menu.game.save"));
+		gameSurrender.setText(Lang.get("menu.game.surrender"));
+		gameQuit.setText(Lang.get("menu.game.quit"));
+
+		languageMenu.setText(Lang.get("menu.lang.title"));
 	}
 
 	/**
 	 * set ActionListener for MenuItems.
 	 */
 	private void setActionListener() {
-		loadItem.addActionListener(getActionListener(Action.Load));
-		english.addActionListener(getActionListener(Action.toEnglish));
-		german.addActionListener(getActionListener(Action.toGerman));
-		saveItem.addActionListener(getActionListener(Action.Save));
-		rulesItem.addActionListener(getActionListener(Action.Rules));
-		exitItem.addActionListener(getActionListener(Action.Exit));
-		surrenderItem.addActionListener(getActionListener(Action.Surrender));
-		quitItem.addActionListener(getActionListener(Action.Quit));
+		gameLoad.addActionListener(getActionListener(Action.Load));
+		gameSave.addActionListener(getActionListener(Action.Save));
+		jziRules.addActionListener(getActionListener(Action.Rules));
+		jziQuit.addActionListener(getActionListener(Action.Exit));
+		gameSurrender.addActionListener(getActionListener(Action.Surrender));
+		gameQuit.addActionListener(getActionListener(Action.Quit));
 	}
 
 	/*
@@ -139,7 +170,7 @@ public class Window extends JFrame implements Observer, IWindow {
 	 * @see jzi.view.IWindow#getSaveItem()
 	 */
 	public JMenuItem getSaveItem() {
-		return saveItem;
+		return gameSave;
 	}
 
 	/*
@@ -148,7 +179,7 @@ public class Window extends JFrame implements Observer, IWindow {
 	 * @see jzi.view.IWindow#getSurrenderItem()
 	 */
 	public JMenuItem getSurrenderItem() {
-		return surrenderItem;
+		return gameSurrender;
 	}
 
 	/*
@@ -157,7 +188,7 @@ public class Window extends JFrame implements Observer, IWindow {
 	 * @see jzi.view.IWindow#getQuitItem()
 	 */
 	public JMenuItem getQuitItem() {
-		return quitItem;
+		return gameQuit;
 	}
 
 	/*
@@ -213,30 +244,11 @@ public class Window extends JFrame implements Observer, IWindow {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		if (((Update) arg) == Update.ChangeLanguage) {
-			changeLanguage();
+		if (((Update) arg).equals(Update.ChangeLanguage)) {
+			setText();
 		}
-		currentMenu.update(o, arg);
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jzi.view.IWindow#changeLanguage()
-	 */
-	public final void changeLanguage() {
-		Iterator<String> words = Language.getCurrentLanguageWords(0).iterator();
-		jziMenu.setText(words.next());
-		gameMenu.setText(words.next());
-		language.setText(words.next());
-		loadItem.setText(words.next());
-		saveItem.setText(words.next());
-		rulesItem.setText(words.next());
-		surrenderItem.setText(words.next());
-		quitItem.setText(words.next());
-		exitItem.setText(words.next());
-		german.setText(words.next());
-		english.setText(words.next());
+		currentMenu.update(o, arg);
 	}
 
 	@Override

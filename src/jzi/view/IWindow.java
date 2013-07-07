@@ -34,10 +34,5 @@ public interface IWindow {
 
     void update(Observable o, Object arg);
 
-    /**
-     * change Language of the game.
-     */
-    void changeLanguage();
-
     JFrame getFrame();
 }
