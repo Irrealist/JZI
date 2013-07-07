@@ -15,7 +15,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.HashMap;
@@ -190,26 +189,6 @@ public class GameMenu implements Menu {
 	 */
 	private BufferedImage zombieImage = null;
 	/**
-	 * Text for ammo use.
-	 */
-	private String ammoUse;
-	/**
-	 * Text for ammo use.
-	 */
-	private String ammoUse2;
-	/**
-	 * Text for life use.
-	 */
-	private String lifeUse;
-	/**
-	 * Text for revive Value.
-	 */
-	private String reviveValue;
-	/**
-	 * Value of the ammo's needed to win.
-	 */
-	private int ammoValue = 0;
-	/**
 	 * The window of the program.
 	 */
 	private IWindow window;
@@ -217,6 +196,8 @@ public class GameMenu implements Menu {
 	 * HashMap for update.
 	 */
 	private HashMap<Update, ViewUpdate> updateMap;
+
+	private int ammoDelta = 0;
 
 	/**
 	 * Constructor, initializes the menu.
@@ -257,6 +238,8 @@ public class GameMenu implements Menu {
 			colorLabel.setBackground(players.get(n).getColor());
 			playerPanel.add(colorLabel);
 		}
+
+		setText();
 
 		addToPanel();
 
@@ -309,7 +292,7 @@ public class GameMenu implements Menu {
 		controlPanel.add(state);
 		controlPanel.add(cont, "wrap");
 
-		fightPanel.add(useAmmo);
+		fightPanel.add(useAmmo, "wrap");
 		fightPanel.add(useLife);
 
 		rollPanel.add(rollDie, "wrap");
@@ -393,15 +376,14 @@ public class GameMenu implements Menu {
 	 */
 	private void createLabelsandButtons(IGame game) {
 		ButtonGroup zombieGroup = new ButtonGroup();
-		Iterator<String> words = Language.getCurrentLanguageWords(3).iterator();
 
-		rollDie = new JButton(words.next());
-		drawTile = new JButton(words.next());
-		rotateLeft = new JButton(words.next());
-		rotateRight = new JButton(words.next());
-		cont = new JButton(words.next());
-		moveZombie = new JRadioButton(words.next(), true);
-		placeZombie = new JRadioButton(words.next(), false);
+		rollDie = new JButton();
+		drawTile = new JButton();
+		rotateLeft = new JButton();
+		rotateRight = new JButton();
+		cont = new JButton();
+		moveZombie = new JRadioButton("", true);
+		placeZombie = new JRadioButton("", false);
 		die = new JLabel();
 		createTable();
 		lifeIcon = new JLabel();
@@ -416,12 +398,8 @@ public class GameMenu implements Menu {
 		ammo = new JLabel("0");
 		life = new JLabel("0");
 		points = new JLabel("0");
-		words.next();
 		revives = new JLabel();
-		reviveValue = words.next();
-		ammoUse = words.next();
-		ammoUse2 = words.next();
-		lifeUse = words.next();
+
 		zombieGroup.add(moveZombie);
 		zombieGroup.add(placeZombie);
 	}
@@ -430,18 +408,17 @@ public class GameMenu implements Menu {
 	 * create a Table for specific game mode.
 	 */
 	private void createTable() {
-		Iterator<String> wordsTable = Language.getCurrentLanguageWords(4)
-				.iterator();
 		if (game.isHardcore()) {
-			Object[] columnNames = { wordsTable.next(), wordsTable.next(), "",
-					"", "", wordsTable.next() };
+			Object[] columnNames = { Lang.get("game.player.name"),
+					Lang.get("game.player.color"), "", "", "",
+					Lang.get("game.player.revives") };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
 					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
 					game);
 
 		} else {
-			Object[] columnNames = { wordsTable.next(), wordsTable.next(), "",
-					"", "" };
+			Object[] columnNames = { Lang.get("game.player.name"),
+					Lang.get("game.player.color"), "", "", "" };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
 					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
 					game);
@@ -456,6 +433,7 @@ public class GameMenu implements Menu {
 		Image scaleAmmoImage = ammoImage.getScaledInstance(30, 30, 0);
 		Image scaleLifeImage = lifeImage.getScaledInstance(30, 30, 0);
 		Image scaleZombieImage = zombieImage.getScaledInstance(30, 30, 0);
+
 		lifeIcon.setIcon(new ImageIcon(scaleLifeImage));
 		ammoIcon.setIcon(new ImageIcon(scaleAmmoImage));
 		zombieIcon.setIcon(new ImageIcon(scaleZombieImage));
@@ -582,8 +560,8 @@ public class GameMenu implements Menu {
 		}
 
 		if (game.isHardcore()) {
-			revives.setText((game.getRevives() - player.getRevives()) + " "
-					+ reviveValue);
+			revives.setText(String.format(Lang.get("game.revives"),
+					game.getRevives() - player.getRevives()));
 		}
 
 		if (game.getCurrentState() instanceof PlayerState) {
@@ -642,9 +620,9 @@ public class GameMenu implements Menu {
 		@Override
 		public void execute(Observable o) {
 			IState current = ((Game) o).getCurrentState();
-			LinkedList<String> words = Language.getCurrentLanguageWords(5);
+
 			if (current instanceof TileState) {
-				state.setText(words.get(0));
+				state.setText(Lang.get("game.mode.tile"));
 				tilePanel.setVisible(true);
 				rollPanel.setVisible(false);
 				fightPanel.setVisible(false);
@@ -653,7 +631,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof PlayerState) {
-				state.setText(words.get(1));
+				state.setText(Lang.get("game.mode.move"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
@@ -662,7 +640,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof FightState) {
-				state.setText(words.get(2));
+				state.setText(Lang.get("game.mode.fight"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				game.update(Update.PlayerAttributeUpdate);
@@ -672,7 +650,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof ZombieState) {
-				state.setText(words.get(3));
+				state.setText(Lang.get("game.mode.zombie"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
@@ -841,7 +819,7 @@ public class GameMenu implements Menu {
 	private class ChangeLanguage implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			changeLanguage();
+			setText();
 		}
 	}
 
@@ -852,11 +830,11 @@ public class GameMenu implements Menu {
 	 *            game object calling the update
 	 */
 	private void showFightButtons(Game game) {
-		ammoValue = game.getDieDifference();
-		useAmmo.setText(ammoUse + " " + game.getDieDifference() + " "
-				+ ammoUse2);
+		ammoDelta = game.getDieDifference();
+
+		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
 		useAmmo.setEnabled(false);
-		useLife.setText(lifeUse);
+		useLife.setText(Lang.get("game.fight.life"));
 		useLife.setEnabled(true);
 		fightPanel.setVisible(true);
 	}
@@ -879,10 +857,10 @@ public class GameMenu implements Menu {
 	 *            game calling the update.
 	 */
 	private void updateFightPanel(Game game) {
-		ammoValue = game.getDieDifference();
-		useAmmo.setText(ammoUse + " " + game.getDieDifference() + " "
-				+ ammoUse2);
-		useLife.setText(lifeUse);
+		ammoDelta = game.getDieDifference();
+
+		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
+		useLife.setText(Lang.get("game.fight.life"));
 	}
 
 	/**
@@ -915,38 +893,16 @@ public class GameMenu implements Menu {
 		fightPanel.setVisible(false);
 	}
 
-	/**
-	 * Initiates language changing.
-	 */
-	private void changeLanguage() {
-		Iterator<String> words = Language.getCurrentLanguageWords(3).iterator();
-		setLanguage(words, Language.getCurrentLanguage());
-	}
-
-	/**
-	 * Sets the game language.
-	 * 
-	 * @param words
-	 *            list of words for the menu
-	 * @param language
-	 *            language name
-	 */
-	private void setLanguage(Iterator<String> words, String language) {
-		rollDie.setText(words.next());
-		drawTile.setText(words.next());
+	private void setText() {
+		rollDie.setText(Lang.get("game.roll"));
+		drawTile.setText(Lang.get("game.draw"));
 		allPlayerTable.changeLanguage();
-		rotateLeft.setText(words.next());
-		rotateRight.setText(words.next());
-		cont.setText(words.next());
-		moveZombie.setText(words.next());
-		placeZombie.setText(words.next());
-		words.next();
-		reviveValue = words.next();
-		ammoUse = words.next();
-		ammoUse2 = words.next();
-		lifeUse = words.next();
-		useAmmo.setText(ammoUse + " " + ammoValue + " " + ammoUse2);
-		useLife.setText(lifeUse);
-		game.update(Update.StateChanged);
+		rotateLeft.setText(Lang.get("game.rotate.left"));
+		rotateRight.setText(Lang.get("game.rotate.right"));
+		cont.setText(Lang.get("game.continue"));
+		moveZombie.setText(Lang.get("game.zombie.move"));
+		placeZombie.setText(Lang.get("game.zombie.place"));
+		useAmmo.setText(String.format(Lang.get("game.fight.ammo"), ammoDelta));
+		useLife.setText(Lang.get("game.fight.life"));
 	}
 }

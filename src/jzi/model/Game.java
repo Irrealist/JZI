@@ -935,10 +935,8 @@ public class Game extends Observable implements IGame {
 
 	@Override
 	public int getDieDifference() {
-
 		return getMap().getField(getCurrentPlayer().getCoordinates())
 				.getZombie().getWinThreshold()
 				- getDie();
 	}
-
 }
