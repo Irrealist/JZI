@@ -5,7 +5,6 @@ import java.awt.Dimension;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -185,6 +184,8 @@ public class SetupMenu extends JPanel implements Menu, ActionListener {
 
 		controlPanel.add(back);
 		controlPanel.add(play);
+		
+		setText();
 
 		add(playerPanel);
 		add(newPanel);
@@ -192,19 +193,29 @@ public class SetupMenu extends JPanel implements Menu, ActionListener {
 		add(controlPanel);
 	}
 
+	private void setText() {
+		back.setText(Lang.get("setup.back"));
+		thresholdLabel.setText(Lang.get("setup.wins"));
+		revivesLabel.setText(Lang.get("setup.revives"));
+		zombification.setText(Lang.get("setup.zombification"));
+		hardcore.setText(Lang.get("setup.hardcore"));
+		ammoLabel.setText(Lang.get("setup.ammo"));
+		addPlayer.setText(Lang.get("setup.add"));
+		play.setText(Lang.get("setup.start"));
+	}
+	
 	/**
 	 * Creates Labels.
 	 */
 	private void createLabels() {
-		Iterator<String> words = Language.getCurrentLanguageWords(2).iterator();
-		back = new JButton(words.next());
-		thresholdLabel = new JLabel(words.next());
-		revivesLabel = new JLabel(words.next());
-		zombification = new JCheckBox(words.next());
-		hardcore = new JCheckBox(words.next());
-		ammoLabel = new JLabel(words.next());
-		addPlayer = new JButton(words.next());
-		play = new JButton(words.next());
+		back = new JButton();
+		thresholdLabel = new JLabel();
+		revivesLabel = new JLabel();
+		zombification = new JCheckBox();
+		hardcore = new JCheckBox();
+		ammoLabel = new JLabel();
+		addPlayer = new JButton();
+		play = new JButton();
 	}
 
 	/**
@@ -409,16 +420,7 @@ public class SetupMenu extends JPanel implements Menu, ActionListener {
 	private class ChangeLanguageUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			Iterator<String> words = Language.getCurrentLanguageWords(2)
-					.iterator();
-			back.setText(words.next());
-			thresholdLabel.setText(words.next());
-			revivesLabel.setText(words.next());
-			zombification.setText(words.next());
-			hardcore = new JCheckBox(words.next());
-			ammoLabel.setText(words.next());
-			addPlayer.setText(words.next());
-			play.setText(words.next());
+			setText();
 		}
 	}
 
