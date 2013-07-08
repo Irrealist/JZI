@@ -874,7 +874,7 @@ public class Game extends Observable implements IGame {
 	public boolean canZombieMove(IZombie zombie) {
 		IField from;
 
-		if (zombie == null) {
+		if (zombie == null || zombie.getCoordinates() == null) {
 			return false;
 		}
 
