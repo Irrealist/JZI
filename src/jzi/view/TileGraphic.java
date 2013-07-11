@@ -74,7 +74,7 @@ public class TileGraphic {
 
         // load image
         try {
-            image = ImageIO.read(new File("./resource/maptiles/" + fileName
+            image = ImageIO.read(new File("./data/img/tiles/" + fileName
                     + ".png"));
         } catch (IOException e) {
             e.printStackTrace();

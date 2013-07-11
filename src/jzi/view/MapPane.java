@@ -142,7 +142,7 @@ public class MapPane extends JPanel {
 					AffineTransformOp.TYPE_BILINEAR);
 
 			superZombieImage = ImageIO.read(new File(
-					"./resource/gameObjects/SuperZombie.png"));
+					"./data/img/obj/SuperZombie.png"));
 
 			ammoImage = scaleOp.filter(ammoImage, null);
 			lifeImage = scaleOp.filter(lifeImage, null);

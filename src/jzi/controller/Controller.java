@@ -90,8 +90,8 @@ public class Controller implements IController {
 
 		populateActionMap();
 
-		parser = new ParseXMLConfiguration("./resource/jzi_maptiles.xml", false);
-		TextData textdata = new TextData("./resource/Spielregeln.txt");
+		parser = new ParseXMLConfiguration("./data/tiles.xml", false);
+		TextData textdata = new TextData("./data/rules.txt");
 		gameRules = textdata.read();
 
 		new Thread(new Runnable() {
@@ -100,7 +100,7 @@ public class Controller implements IController {
 
 				for (int n = 0; n < die.length; n++) {
 					try {
-						new DieGraphic(ImageIO.read(new File("./resource/die/"
+						new DieGraphic(ImageIO.read(new File("./data/img/die/"
 								+ die[n] + ".png")), n + 1);
 					} catch (IOException e) {
 						e.printStackTrace();

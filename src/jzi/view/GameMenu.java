@@ -358,12 +358,9 @@ public class GameMenu implements Menu {
 	 */
 	private void readImages() {
 		try {
-			ammoImage = ImageIO
-					.read(new File("./resource/gameObjects/Ammo.png"));
-			lifeImage = ImageIO
-					.read(new File("./resource/gameObjects/Life.png"));
-			zombieImage = ImageIO.read(new File(
-					"./resource/gameObjects/Zombie.png"));
+			ammoImage = ImageIO.read(new File("./data/img/obj/Ammo.png"));
+			lifeImage = ImageIO.read(new File("./data/img/obj//Life.png"));
+			zombieImage = ImageIO.read(new File("./data/img/obj/Zombie.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
