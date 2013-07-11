@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.LinkedList;
 
 import jzi.controller.state.ZombieState;
+import jzi.model.game.GameCoop;
 import jzi.model.map.FieldEmptyStub;
 import jzi.model.map.ITileType;
 import jzi.model.map.MapStub;

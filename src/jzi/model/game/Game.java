@@ -1,4 +1,4 @@
-package jzi.model;
+package jzi.model.game;
 
 import java.awt.Color;
 import java.util.LinkedList;
@@ -8,6 +8,12 @@ import java.util.Random;
 
 import jzi.controller.state.IState;
 import jzi.controller.state.TileState;
+import jzi.model.Die;
+import jzi.model.IDie;
+import jzi.model.entities.IPlayer;
+import jzi.model.entities.IZombie;
+import jzi.model.entities.SuperZombie;
+import jzi.model.entities.Zombie;
 import jzi.model.map.Coordinates;
 import jzi.model.map.Direction;
 import jzi.model.map.ICoordinates;

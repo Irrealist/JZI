@@ -2,7 +2,6 @@ package jzi.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -11,7 +10,6 @@ import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -20,10 +18,9 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
 import net.miginfocom.swing.MigLayout;
-
-import jzi.model.GameCoop;
-import jzi.model.IGame;
-import jzi.model.IPlayer;
+import jzi.model.entities.IPlayer;
+import jzi.model.game.GameCoop;
+import jzi.model.game.IGame;
 
 /**
  * GUI class for the player menu

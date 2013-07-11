@@ -1,10 +1,13 @@
-package jzi.model;
+package jzi.model.game;
 
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.Observer;
 
 import jzi.controller.state.IState;
+import jzi.model.IDie;
+import jzi.model.entities.IPlayer;
+import jzi.model.entities.IZombie;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IField;
 import jzi.model.map.IMap;

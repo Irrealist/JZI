@@ -3,7 +3,7 @@ package jzi.model.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import jzi.model.IZombie;
+import jzi.model.entities.IZombie;
 
 /**
  * Field holds data for one field object.

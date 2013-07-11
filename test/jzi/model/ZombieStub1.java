@@ -1,5 +1,6 @@
 package jzi.model;
 
+import jzi.model.entities.IZombie;
 import jzi.model.map.ICoordinates;
 
 public class ZombieStub1 implements IZombie {

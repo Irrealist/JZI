@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import jzi.model.game.Game;
 import jzi.model.map.CoordinatesStub;
 import jzi.model.map.FieldEmptyStub;
 import jzi.model.map.FieldStub;

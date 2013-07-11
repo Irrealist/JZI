@@ -1,5 +1,6 @@
 package jzi.model;
 
+import jzi.model.entities.IZombie;
 import jzi.model.map.CoordinatesStub;
 import jzi.model.map.ICoordinates;
 

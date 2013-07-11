@@ -1,6 +1,7 @@
 package jzi.model;
 
 import static org.junit.Assert.*;
+import jzi.model.entities.Player;
 
 import org.junit.Before;
 import org.junit.Test;

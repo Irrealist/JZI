@@ -8,10 +8,10 @@ import java.util.LinkedList;
 
 import jzi.controller.state.FightStateStub;
 import jzi.controller.state.StateStub;
-import jzi.model.Game;
-import jzi.model.GameCoop;
 import jzi.model.GameStub;
-import jzi.model.IGame;
+import jzi.model.game.Game;
+import jzi.model.game.GameCoop;
+import jzi.model.game.IGame;
 import jzi.model.map.ITileType;
 import jzi.view.SetupMenu;
 import jzi.view.GameMenu;

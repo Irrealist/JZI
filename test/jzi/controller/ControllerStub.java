@@ -2,7 +2,7 @@ package jzi.controller;
 
 import java.io.File;
 
-import jzi.model.IGame;
+import jzi.model.game.IGame;
 import jzi.view.IWindow;
 
 public class ControllerStub implements IController {

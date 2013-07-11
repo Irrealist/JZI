@@ -2,7 +2,7 @@ package jzi.controller.state;
 
 import java.util.Observable;
 
-import jzi.model.IGame;
+import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
 import jzi.view.IWindow;
 

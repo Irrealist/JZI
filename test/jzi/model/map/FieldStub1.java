@@ -1,7 +1,7 @@
 package jzi.model.map;
 
-import jzi.model.IZombie;
 import jzi.model.ZombieStub;
+import jzi.model.entities.IZombie;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IDirection;
 import jzi.model.map.IField;

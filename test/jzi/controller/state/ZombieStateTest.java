@@ -1,8 +1,8 @@
 package jzi.controller.state;
 
 import static org.junit.Assert.*;
-import jzi.model.Game;
 import jzi.model.GameStub;
+import jzi.model.game.Game;
 import jzi.model.map.CoordinatesStub;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;

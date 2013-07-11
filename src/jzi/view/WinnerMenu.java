@@ -13,9 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import jzi.model.GameCoop;
-import jzi.model.IGame;
-import jzi.model.IPlayer;
+import jzi.model.entities.IPlayer;
+import jzi.model.game.GameCoop;
+import jzi.model.game.IGame;
 import net.miginfocom.swing.MigLayout;
 
 /**

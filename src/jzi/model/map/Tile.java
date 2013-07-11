@@ -2,7 +2,7 @@ package jzi.model.map;
 
 import java.util.Random;
 
-import jzi.model.Zombie;
+import jzi.model.entities.Zombie;
 
 /**
  * Tile class stores tile information, after the XML document is parsed.

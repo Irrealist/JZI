@@ -1,9 +1,9 @@
 package jzi.controller.state;
 
-import jzi.model.Game;
-import jzi.model.IGame;
-import jzi.model.IPlayer;
-import jzi.model.IZombie;
+import jzi.model.entities.IPlayer;
+import jzi.model.entities.IZombie;
+import jzi.model.game.Game;
+import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IField;
 import jzi.view.DieGraphic;

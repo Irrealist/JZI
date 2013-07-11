@@ -7,6 +7,10 @@ import java.util.Observer;
 
 import jzi.controller.state.IState;
 import jzi.controller.state.StateStub;
+import jzi.model.entities.IPlayer;
+import jzi.model.entities.IZombie;
+import jzi.model.entities.Player;
+import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IField;
 import jzi.model.map.IMap;

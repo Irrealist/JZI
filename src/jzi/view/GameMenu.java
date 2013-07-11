@@ -25,9 +25,9 @@ import jzi.controller.state.IState;
 import jzi.controller.state.PlayerState;
 import jzi.controller.state.TileState;
 import jzi.controller.state.ZombieState;
-import jzi.model.Game;
-import jzi.model.IGame;
-import jzi.model.IPlayer;
+import jzi.model.entities.IPlayer;
+import jzi.model.game.Game;
+import jzi.model.game.IGame;
 import jzi.model.map.ITile;
 
 /**

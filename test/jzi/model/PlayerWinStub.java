@@ -3,6 +3,7 @@ package jzi.model;
 import java.awt.Color;
 import java.util.Observable;
 
+import jzi.model.entities.IPlayer;
 import jzi.model.map.CoordinatesStub;
 import jzi.model.map.ICoordinates;
 

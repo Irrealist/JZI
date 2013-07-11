@@ -1,7 +1,7 @@
 package jzi.controller.state;
 
 import jzi.controller.state.FightState;
-import jzi.model.IPlayer;
+import jzi.model.entities.IPlayer;
 import jzi.view.IWindow;
 
 public class FightStateStub extends FightState {

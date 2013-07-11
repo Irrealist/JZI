@@ -4,9 +4,8 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 
-import jzi.model.IGame;
+import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
-
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
 import jzi.view.Update;

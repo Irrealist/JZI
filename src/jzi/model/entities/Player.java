@@ -1,4 +1,4 @@
-package jzi.model;
+package jzi.model.entities;
 
 import java.awt.Color;
 

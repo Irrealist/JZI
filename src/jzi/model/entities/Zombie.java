@@ -1,4 +1,4 @@
-package jzi.model;
+package jzi.model.entities;
 
 import jzi.model.map.ICoordinates;
 

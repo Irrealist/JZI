@@ -17,8 +17,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import jzi.model.IGame;
-import jzi.model.IPlayer;
+import jzi.model.entities.IPlayer;
+import jzi.model.game.IGame;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package jzi.model;
+package jzi.model.game;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +7,9 @@ import java.util.Map;
 import jzi.controller.state.IState;
 import jzi.controller.state.TileState;
 import jzi.controller.state.ZombieState;
+import jzi.model.entities.IPlayer;
+import jzi.model.entities.IZombie;
+import jzi.model.entities.Zombie;
 import jzi.model.map.Coordinates;
 import jzi.model.map.Direction;
 import jzi.model.map.ICoordinates;

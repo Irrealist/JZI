@@ -1,6 +1,6 @@
 package jzi.model.map;
 
-import jzi.model.IZombie;
+import jzi.model.entities.IZombie;
 
 public class FieldEmptyStub implements IField {
 

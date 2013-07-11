@@ -1,6 +1,6 @@
 package jzi.model.map;
 
-import jzi.model.IZombie;
+import jzi.model.entities.IZombie;
 
 /**
  * Should be implemented by the original class and the stub class. All the
