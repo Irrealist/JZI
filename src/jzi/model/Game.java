@@ -905,34 +905,6 @@ public class Game extends Observable implements IGame {
 		setDie(new Random().nextInt(MAX_ROLL) + 1);
 	}
 
-	// -------------------------------------------------------------//
-	// --------------------------JUnitRv----------------------------//
-
-	/**
-	 * Method added for JUnitRV, opens a pop up showing the winner.
-	 */
-	public final void showWinner() {
-		if (winner == null) {
-			return;
-		}
-
-		// pop up here
-		// Popups.showWinner(winner.getName());
-	}
-
-	/**
-	 * Method for JUnitRV, simulates rolling.
-	 * 
-	 * @return value obtained by rolling
-	 */
-	public final int roll() {
-		if (hasAdditionalPoint()) {
-			return Math.min(new Random().nextInt(MAX_ROLL) + 2, MAX_ROLL);
-		}
-
-		return new Random().nextInt(MAX_ROLL) + 1;
-	}
-
 	@Override
 	public int getDieDifference() {
 		return getMap().getField(getCurrentPlayer().getCoordinates())
