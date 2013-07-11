@@ -109,8 +109,4 @@ public interface ITile extends java.io.Serializable {
      * @return rotation expressed as a direction
      */
     IDirection getRotation();
-
-    boolean isFinalized();
-
-    void setFinalized();
 }

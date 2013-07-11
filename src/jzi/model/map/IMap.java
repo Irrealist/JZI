@@ -105,4 +105,10 @@ public interface IMap extends java.io.Serializable {
      * @return true if fields are neighbors
      */
     boolean checkNeighbor(IField from, IField to);
+
+	boolean checkTileRotations(ICoordinates coord, ITile tile);
+
+	LinkedList<ICoordinates> getEmptyTiles();
+
+	LinkedList<ICoordinates> getEmptyBuildings();
 }

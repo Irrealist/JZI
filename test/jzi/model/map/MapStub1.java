@@ -92,4 +92,22 @@ public class MapStub1 implements IMap {
         return true;
     }
 
+	@Override
+	public boolean checkTileRotations(ICoordinates coord, ITile tile) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public LinkedList<ICoordinates> getEmptyTiles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LinkedList<ICoordinates> getEmptyBuildings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

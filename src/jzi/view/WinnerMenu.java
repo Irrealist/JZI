@@ -1,177 +1,149 @@
 package jzi.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import jzi.model.GameCoop;
 import jzi.model.IGame;
 import jzi.model.IPlayer;
-
 import net.miginfocom.swing.MigLayout;
 
 /**
- *
+ * 
  * create WinnerMenu for the game.
- *
+ * 
  */
 public class WinnerMenu extends JPanel implements Menu {
-    /**
-     * serial ID.
-     */
-    private static final long serialVersionUID = -2839932146818151358L;
-    /**
-     * Current window instance.
-     */
-    private IWindow window;
-    /**
-     * win text.
-     */
-    private JLabel text;
-    /**
-     * color of the winner.
-     */
-    private JLabel color;
-    /**
-     * additional win text.
-     */
-    private JLabel continueText;
-    /**
-     * Button back to MainMenu.
-     */
-    private JButton back;
-    /**
-     * Current game Instance.
-     */
-    private IGame game;
-    /**
-     * HashMap for updates.
-     */
-    private HashMap<Update, ViewUpdate> updateMap;
+	/**
+	 * serial ID.
+	 */
+	private static final long serialVersionUID = -2839932146818151358L;
+	/**
+	 * Current window instance.
+	 */
+	private IWindow window;
+	/**
+	 * win text.
+	 */
+	private JLabel text;
+	/**
+	 * Button back to MainMenu.
+	 */
+	private JButton back;
+	/**
+	 * Current game Instance.
+	 */
+	private IGame game;
+	/**
+	 * HashMap for updates.
+	 */
+	private HashMap<Update, ViewUpdate> updateMap;
 
-    /**
-     * create a WinnerMenu for a specific type of game.
-     *
-     * @param windowHandle
-     * @param game
-     */
-    public WinnerMenu(IWindow windowHandle, IGame game) {
-        window = windowHandle;
-        this.game = game;
-        updateMap = new HashMap<>();
-        updateMap.put(Update.ChangeLanguage, new ChangeLanguageUpdate());
-        setLayout(new MigLayout("align center center", "[center]"));
-        if (game instanceof GameCoop) {
-            setCoopGameWinnerMenu();
-        } else {
-            setNormalWinnerMenu();
-        }
-    }
+	/**
+	 * create a WinnerMenu for a specific type of game.
+	 * 
+	 * @param windowHandle
+	 * @param game
+	 */
+	public WinnerMenu(IWindow windowHandle, IGame game) {
+		this.window = windowHandle;
+		this.game = game;
 
-    /**
-     * set a WinnerMenu for a normal Game.
-     */
-    private void setNormalWinnerMenu() {
-        LinkedList<String> wordList = Language.getCurrentLanguageWords(7);
-        if (game.getWinner() == null) {
-            text = new JLabel(wordList.get(0));
-        } else {
-            text = new JLabel(wordList.get(1) + " "
-                    + game.getWinner().getName());
-            color = new JLabel();
-            color.setPreferredSize(new Dimension(60, 20));
-            color.setOpaque(true);
-            color.setBackground(game.getWinner().getColor());
-            continueText = new JLabel(wordList.get(2));
-        }
+		updateMap = new HashMap<>();
+		updateMap.put(Update.ChangeLanguage, new ChangeLanguageUpdate());
 
-        back = new JButton(wordList.get(3));
+		setLayout(new MigLayout("align center center, wrap 1", "[center]"));
 
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                window.setMenu(new MainMenu(window));
-            }
-        });
+		text = new JLabel();
+		back = new JButton();
 
-        add(text);
-        add(color);
-        add(continueText, "wrap");
-        add(back);
-    }
+		back.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				window.setMenu(new MainMenu(window));
+			}
+		});
 
-    /**
-     * set a WinnerMenu for a Coop Game.
-     */
-    private void setCoopGameWinnerMenu() {
-        LinkedList<String> wordList = Language.getCurrentLanguageWords(7);
+		add(text);
 
-        text = new JLabel(wordList.get(4));
-        add(text, "wrap");
-        Iterator<IPlayer> playerIterator = game.getPlayers().iterator();
-        while (playerIterator.hasNext()) {
-            IPlayer player = playerIterator.next();
-            JLabel playerName = new JLabel(player.getName());
-            JLabel playerColor = new JLabel();
-            playerColor.setPreferredSize(new Dimension(60, 20));
-            playerColor.setOpaque(true);
-            playerColor.setBackground(player.getColor());
-            add(playerName);
-            add(playerColor, "wrap");
-        }
-        back = new JButton(wordList.get(3));
+		if (game instanceof GameCoop) {
+			for (IPlayer player : game.getPlayers()) {
+				addPlayer(player);
+			}
+		} else if (game.getWinner() != null) {
+			addPlayer(game.getWinner());
+		}
 
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                window.setMenu(new MainMenu(window));
-            }
-        });
-        add(back);
-    }
+		add(back);
 
-    @Override
-    public void update(Observable o, Object arg) {
-        updateMap.get((Update) arg).execute(o);
-    }
+		setText();
+	}
 
-    /**
-     * change Language of the game.
-     * @author Tobias Groth
-     *
-     */
-    private class ChangeLanguageUpdate implements ViewUpdate {
-        @Override
-        public void execute(Observable o) {
-            LinkedList<String> wordList = Language.getCurrentLanguageWords(7);
-            if (game instanceof GameCoop) {
-                text.setText(wordList.get(4));
-                back.setText(wordList.get(3));
-            } else {
+	private void addPlayer(IPlayer player) {
+		JLabel label = new JLabel(player.getName());
+		Color color = player.getColor();
+		Font font = label.getFont();
 
-                if (game.getWinner() == null) {
-                    text.setText(wordList.get(0));
-                } else {
-                    text.setText(wordList.get(1) + " "
-                            + game.getWinner().getName());
-                    continueText.setText(wordList.get(2));
-                }
-                back.setText(wordList.get(3));
-            }
+		label.setOpaque(true);
+		label.setBackground(color);
+		label.setPreferredSize(new Dimension(150, 30));
+		label.setFont(new Font(font.getFontName(), Font.BOLD, font.getSize()));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        }
-    }
+		if ((0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color
+				.getBlue()) / 255 > 0.5) {
+			label.setForeground(Color.BLACK);
+		} else {
+			label.setForeground(Color.WHITE);
+		}
 
-    @Override
-    public JPanel getPanel() {
-        return this;
-    }
+		add(label);
+	}
+
+	private void setText() {
+		if (game instanceof GameCoop) {
+			text.setText(Language.get("win.coop"));
+		} else {
+			text.setText(Language.get("win.normal"));
+		}
+
+		back.setText(Language.get("win.back"));
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		ViewUpdate update = updateMap.get((Update) arg);
+
+		if (update != null) {
+			update.execute(o);
+		}
+	}
+
+	/**
+	 * change Language of the game.
+	 * 
+	 * @author Tobias Groth
+	 * 
+	 */
+	private class ChangeLanguageUpdate implements ViewUpdate {
+		@Override
+		public void execute(Observable o) {
+			setText();
+		}
+	}
+
+	@Override
+	public JPanel getPanel() {
+		return this;
+	}
 }

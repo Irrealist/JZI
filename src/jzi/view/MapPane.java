@@ -1,10 +1,13 @@
 package jzi.view;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -26,12 +29,19 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import jzi.controller.state.FightState;
+import jzi.controller.state.ZombieMode;
+import jzi.controller.state.ZombieState;
 import jzi.model.IGame;
 import jzi.model.IPlayer;
 import jzi.model.IZombie;
 import jzi.model.SuperZombie;
+import jzi.model.Zombie;
+import jzi.model.map.Coordinates;
+import jzi.model.map.Direction;
 import jzi.model.map.Field;
 import jzi.model.map.ICoordinates;
+import jzi.model.map.IDirection;
 import jzi.model.map.IField;
 import jzi.model.map.ITile;
 import jzi.model.map.Tile;
@@ -43,491 +53,674 @@ import jzi.model.map.Tile;
  * 
  */
 public class MapPane extends JPanel {
-    /**
-     * Starting scale of the map.
-     */
-    private static final double START_SCALE = 0.5;
-    /**
-     * Generated serialVersionUID.
-     */
-    private static final long serialVersionUID = 4607860473640965464L;
-    /**
-     * Affine transform used to translate and scale the map.
-     */
-    private AffineTransform at;
-    /**
-     * Game handle.
-     */
-    private IGame game;
-    /**
-     * Current x translation.
-     */
-    private double translateX;
-    /**
-     * Current y translation.
-     */
-    private double translateY;
-    /**
-     * Current scale.
-     */
-    private double scale;
-    /**
-     * Image used for ammunition.
-     */
-    private BufferedImage ammoImage;
-    /**
-     * Image used for life points.
-     */
-    private BufferedImage lifeImage;
-    /**
-     * Image used for zombies.
-     */
-    private BufferedImage zombieImage;
-    /**
-     * Image user for super zombies.
-     */
-    private BufferedImage superZombieImage;
-    /**
-     * Clicked point transformed to image coordinates.
-     */
-    private Point2D transformedPoint;
-    /**
-     * Last clicked point.
-     */
-    private Point2D lastClicked;
+	/**
+	 * Starting scale of the map.
+	 */
+	private static final double START_SCALE = 0.5;
+	/**
+	 * Generated serialVersionUID.
+	 */
+	private static final long serialVersionUID = 4607860473640965464L;
+	/**
+	 * Affine transform used to translate and scale the map.
+	 */
+	private AffineTransform at;
+	/**
+	 * Game handle.
+	 */
+	private IGame game;
+	/**
+	 * Current x translation.
+	 */
+	private double translateX;
+	/**
+	 * Current y translation.
+	 */
+	private double translateY;
+	/**
+	 * Current scale.
+	 */
+	private double scale;
+	/**
+	 * Image used for ammunition.
+	 */
+	private BufferedImage ammoImage;
+	/**
+	 * Image used for life points.
+	 */
+	private BufferedImage lifeImage;
+	/**
+	 * Image used for zombies.
+	 */
+	private BufferedImage zombieImage;
+	/**
+	 * Image user for super zombies.
+	 */
+	private BufferedImage superZombieImage;
+	/**
+	 * Clicked point transformed to image coordinates.
+	 */
+	private Point2D transformedPoint;
+	/**
+	 * Last clicked point.
+	 */
+	private Point2D lastClicked;
+	/**
+	 * Field coordinates that the mouse is currently hovering over.
+	 */
+	private ICoordinates mouseCoords;
 
-    /**
-     * Constructor with game instance, initializes transform attributes and
-     * loads images.
-     * 
-     * @param game
-     *            game instance
-     * @param zombieImage2
-     * @param ammoImage2
-     * @param lifeImage
-     */
-    public MapPane(IGame game, BufferedImage lifeImage,
-            BufferedImage ammoImage, BufferedImage zombieImage) {
-        super();
-        this.game = game;
-        translateX = 0;
-        translateY = 0;
-        scale = START_SCALE;
-        this.ammoImage = ammoImage;
-        this.lifeImage = lifeImage;
-        this.zombieImage = zombieImage;
+	/**
+	 * Constructor with game instance, initializes transform attributes and
+	 * loads images.
+	 * 
+	 * @param game
+	 *            game instance
+	 * @param zombieImage2
+	 * @param ammoImage2
+	 * @param lifeImage
+	 */
+	public MapPane(IGame game, BufferedImage lifeImage,
+			BufferedImage ammoImage, BufferedImage zombieImage) {
+		super();
+		this.game = game;
+		translateX = 0;
+		translateY = 0;
+		scale = START_SCALE;
+		this.ammoImage = ammoImage;
+		this.lifeImage = lifeImage;
+		this.zombieImage = zombieImage;
 
-        try {
-            AffineTransform scaleTransform = new AffineTransform();
-            AffineTransformOp scaleOp;
+		try {
+			AffineTransform scaleTransform = new AffineTransform();
+			AffineTransformOp scaleOp;
 
-            scaleTransform
-                    .scale(Tile.TILE_SIZE / 800.0, Tile.TILE_SIZE / 800.0);
+			scaleTransform
+					.scale(Tile.TILE_SIZE / 800.0, Tile.TILE_SIZE / 800.0);
 
-            scaleOp = new AffineTransformOp(scaleTransform,
-                    AffineTransformOp.TYPE_BILINEAR);
+			scaleOp = new AffineTransformOp(scaleTransform,
+					AffineTransformOp.TYPE_BILINEAR);
 
-            superZombieImage = ImageIO.read(new File(
-                    "./resource/gameObjects/SuperZombie.png"));
+			superZombieImage = ImageIO.read(new File(
+					"./resource/gameObjects/SuperZombie.png"));
 
-            ammoImage = scaleOp.filter(ammoImage, null);
-            lifeImage = scaleOp.filter(lifeImage, null);
-            zombieImage = scaleOp.filter(zombieImage, null);
-            superZombieImage = scaleOp.filter(superZombieImage, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			ammoImage = scaleOp.filter(ammoImage, null);
+			lifeImage = scaleOp.filter(lifeImage, null);
+			zombieImage = scaleOp.filter(zombieImage, null);
+			superZombieImage = scaleOp.filter(superZombieImage, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        PanningHandler panning = new PanningHandler();
+		PanningHandler panning = new PanningHandler();
 
-        addMouseListener(panning);
-        addMouseMotionListener(panning);
-        addMouseWheelListener(new ScaleHandler());
-    }
+		addMouseListener(panning);
+		addMouseMotionListener(panning);
+		addMouseWheelListener(new ScaleHandler());
+	}
 
-    /**
-     * Handles painting of the map.
-     * 
-     * @param g
-     *            graphics object that handles the actual painting
-     */
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+	/**
+	 * Handles painting of the map.
+	 * 
+	 * @param g
+	 *            graphics object that handles the actual painting
+	 */
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-        // get the graphics object and save the current transform
-        Graphics2D graphics = (Graphics2D) g;
-        AffineTransform transformBackup = graphics.getTransform();
+		// get the graphics object and save the current transform
+		Graphics2D graphics = (Graphics2D) g;
+		AffineTransform transformBackup = graphics.getTransform();
 
-        // paint the background
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, getWidth(), getHeight());
+		// paint the background
+		graphics.setColor(Color.BLACK);
+		graphics.fillRect(0, 0, getWidth(), getHeight());
 
-        // create a new affine transform
-        at = new AffineTransform(transformBackup);
+		// create a new affine transform
+		at = new AffineTransform(transformBackup);
 
-        // and apply our transformations
-        at.translate(getWidth() / 2, getHeight() / 2);
-        at.scale(scale, scale);
-        at.translate(-getWidth() / 2, -getHeight() / 2);
+		// and apply our transformations
+		at.translate(getWidth() / 2, getHeight() / 2);
+		at.scale(scale, scale);
+		at.translate(-getWidth() / 2, -getHeight() / 2);
 
-        at.translate(translateX, translateY);
+		at.translate(translateX, translateY);
 
-        // set our new transform
-        graphics.setTransform(at);
+		// set our new transform
+		graphics.setTransform(at);
 
-        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // paint all tiles
-        for (ITile tile : game.getMap().getTiles()) {
-            paintTile(graphics, tile);
-        }
+		// paint all tiles
+		for (ITile tile : game.getMap().getTiles()) {
+			paintTile(graphics, tile, tile.getCoordinates());
+		}
 
-        // paint all zombies
-        paintZombies(graphics);
+		// paint empty spots
+		if (game.getCurrentTile() != null) {
+			paintEmptyTiles(graphics);
+			paintCurrentTile(graphics);
+		}
 
-        // paint all players
-        paintPlayers(graphics);
+		// paint current zombie
+		paintCurrentZombie(graphics);
 
-        // and restore the old transform
-        graphics.setTransform(transformBackup);
-    }
+		// paint all players
+		paintPlayers(graphics);
 
-    /**
-     * Paints one tile onto the map.
-     * 
-     * @param graphics
-     *            graphics object that handles the actual painting
-     * @param tile
-     *            tile to be painted
-     */
-    private void paintTile(Graphics2D graphics, ITile tile) {
-        ICoordinates coords = tile.getCoordinates();
-        BufferedImage image = TileGraphic.getRenderImage(tile);
+		paintDim(graphics);
 
-        // draw the tile image
-        graphics.drawImage(image, coords.getX() * Tile.TILE_SIZE, coords.getY()
-                * Tile.TILE_SIZE, this);
+		// and restore the old transform
+		graphics.setTransform(transformBackup);
+	}
 
-        // draw objects on each field
-        for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
-            for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
-                IField field = tile.getField(y, x);
+	/**
+	 * Focuses the map on a field.
+	 * 
+	 * @param coords
+	 *            coordinates of field to focus on
+	 */
+	public void focus(ICoordinates coords) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
 
-                // draw ammunition
-                // multiply tile coordinates by tile size, and field coordinates
-                // by field size
-                if (field.hasAmmo()) {
-                    graphics.drawImage(ammoImage, coords.getX()
-                            * Tile.TILE_SIZE + x * Field.FIELD_SIZE,
-                            coords.getY() * Tile.TILE_SIZE + y
-                                    * Field.FIELD_SIZE, this);
-                }
+		translateX = -tile.getX() * Tile.TILE_SIZE - (field.getX() - 1)
+				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
+		translateY = -tile.getY() * Tile.TILE_SIZE - (field.getY() - 1)
+				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
+	}
 
-                // draw life points
-                if (field.hasLife()) {
-                    graphics.drawImage(lifeImage, coords.getX()
-                            * Tile.TILE_SIZE + x * Field.FIELD_SIZE,
-                            coords.getY() * Tile.TILE_SIZE + y
-                                    * Field.FIELD_SIZE, this);
-                }
-            }
-        }
-    }
+	/**
+	 * Paints one tile onto the map.
+	 * 
+	 * @param graphics
+	 *            graphics object that handles the actual painting
+	 * @param tile
+	 *            tile to be painted
+	 */
+	private void paintTile(Graphics2D graphics, ITile tile, ICoordinates coords) {
+		BufferedImage image = TileGraphic.getRenderImage(tile);
 
-    /**
-     * Paints all zombies on the map.
-     * 
-     * @param graphics
-     *            graphics object that handles the painting
-     */
-    private void paintZombies(Graphics2D graphics) {
-        // iterate through zombies
-        for (IZombie zombie : game.getZombies()) {
-            ICoordinates field = zombie.getCoordinates().toRelativeField();
-            ICoordinates tile = zombie.getCoordinates().toTile();
+		// draw the tile image
+		drawImage(graphics, image, coords.toField());
 
-            // check type of zombie and draw according image
-            if (zombie instanceof SuperZombie) {
-                graphics.drawImage(superZombieImage, tile.getX()
-                        * Tile.TILE_SIZE + field.getX() * Field.FIELD_SIZE,
-                        tile.getY() * Tile.TILE_SIZE + field.getY()
-                                * Field.FIELD_SIZE, this);
-            } else {
-                graphics.drawImage(zombieImage, tile.getX() * Tile.TILE_SIZE
-                        + field.getX() * Field.FIELD_SIZE, tile.getY()
-                        * Tile.TILE_SIZE + field.getY() * Field.FIELD_SIZE,
-                        this);
-            }
-        }
+		// draw objects on each field
+		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
+			for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
+				paintField(graphics, tile.getField(y, x),
+						coords.toField().add(new Coordinates(x, y)));
+			}
+		}
+	}
 
-        // draw a border around the current zombie if there is one
-        if (game.getCurrentZombie() != null) {
-            ICoordinates coords = game.getCurrentZombie().getCoordinates();
-            ICoordinates tile = coords.toTile();
-            ICoordinates field = coords.toRelativeField();
-            Stroke stroke = graphics.getStroke();
+	private void paintField(Graphics2D graphics, IField field,
+			ICoordinates coords) {
+		IZombie zombie = field.getZombie();
 
-            // draw a red border around the current zombie
-            graphics.setColor(Color.GREEN);
-            graphics.setStroke(new BasicStroke(5));
-            graphics.drawRect(tile.getX() * Tile.TILE_SIZE + field.getX()
-                    * Field.FIELD_SIZE,
-                    tile.getY() * Tile.TILE_SIZE + field.getY()
-                            * Field.FIELD_SIZE, Field.FIELD_SIZE,
-                    Field.FIELD_SIZE);
-            graphics.setStroke(stroke);
-        }
-    }
+		// draw ammunition
+		if (field.hasAmmo()) {
+			drawImage(graphics, ammoImage, coords);
+		}
 
-    /**
-     * Paints all the players onto the map.
-     * 
-     * @param graphics
-     *            graphics object that handles the actual painting
-     */
-    private void paintPlayers(Graphics2D graphics) {
-        HashMap<ICoordinates, LinkedList<Color>> colorMap = new HashMap<>();
+		// draw life points
+		if (field.hasLife()) {
+			drawImage(graphics, lifeImage, coords);
+		}
 
-        // iterate through players and add their color to their coordinates
-        for (IPlayer player : game.getPlayers()) {
-            ICoordinates coords = player.getCoordinates();
+		// draw zombie if there is one
+		if (zombie instanceof Zombie) {
+			drawImage(graphics, zombieImage, coords);
+		}
 
-            if (colorMap.get(coords) == null) {
-                colorMap.put(coords, new LinkedList<Color>());
-            }
+		// draw super zombie if there is one
+		if (zombie instanceof SuperZombie) {
+			drawImage(graphics, superZombieImage, coords);
+		}
+	}
 
-            colorMap.get(coords).add(player.getColor());
-        }
+	/**
+	 * Paints all empty spots where a tile may be placed.
+	 * 
+	 * @param graphics
+	 *            Graphics object to paint onto
+	 */
+	private void paintEmptyTiles(Graphics2D graphics) {
+		Composite comp = graphics.getComposite();
+		ITile tile = game.getCurrentTile();
 
-        // for each point that has at least one player, paint their circles or
-        // arcs
-        for (Map.Entry<ICoordinates, LinkedList<Color>> entry : colorMap
-                .entrySet()) {
-            ICoordinates coords = entry.getKey();
-            // defines the position of the player on the arc
-            int i = 0;
-            // defines the arc size for one player at these coordinates
-            int size = 360 / entry.getValue().size();
-            int x = coords.toTile().getX() * Tile.TILE_SIZE
-                    + coords.toRelativeField().getX() * Field.FIELD_SIZE + 40;
-            int y = coords.toTile().getY() * Tile.TILE_SIZE
-                    + coords.toRelativeField().getY() * Field.FIELD_SIZE + 40;
+		graphics.setComposite(AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.2f));
 
-            // draw the arc for each player (each color)
-            for (Color color : entry.getValue()) {
-                graphics.setColor(color);
-                graphics.fillArc(x, y, Field.FIELD_SIZE - 80,
-                        Field.FIELD_SIZE - 80, i * size, size);
-                i++;
-            }
-        }
-    }
+		for (ICoordinates coords : game.getMap().getEmptyTiles()) {
+			if (coords.equals(mouseCoords)) {
+				continue;
+			}
 
-    /**
-     * Defines this component's preferred size.
-     * 
-     * @return preferred size
-     */
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(2000, 2000);
-    }
+			if (game.getMap().checkTileRotations(coords, tile)) {
+				graphics.setColor(Color.GREEN);
+			} else {
+				graphics.setColor(Color.RED);
+			}
 
-    /**
-     * Gets the last point clicked on the map.
-     * 
-     * @return last clicked point
-     */
-    public Point2D getLastPoint() {
-        return lastClicked;
-    }
+			fillSquare(graphics, coords.toField(), Tile.TILE_SIZE);
+		}
 
-    /**
-     * Sets the last clicked point for testing purposes.
-     * 
-     * @param last
-     *            new point
-     */
-    public void setLastPoint(Point2D last) {
-        lastClicked = last;
-    }
+		graphics.setComposite(comp);
+	}
 
-    /**
-     * Handles panning of the map view.
-     * 
-     * @author Buddy Jonte
-     * 
-     */
-    private class PanningHandler implements MouseListener, MouseMotionListener {
-        /**
-         * Reference x coordinate; defines where the user initiated the panning
-         * action.
-         */
-        private double referenceX;
-        /**
-         * Reference y coordinate; defines where the user initiated the panning
-         * action.
-         */
-        private double referenceY;
-        /**
-         * Transform that was valid at the beginning of the panning.
-         */
-        private AffineTransform initialTransform;
+	private void paintCurrentTile(Graphics2D graphics) {
+		ITile tile = game.getCurrentTile();
+		Composite comp = graphics.getComposite();
 
-        /**
-         * Invoked when a mouse button has been pressed on the map.
-         * 
-         * @param e
-         *            Mouse event for this action
-         */
-        @Override
-        public void mousePressed(MouseEvent e) {
-            // transform the clicked point into map coordinates
-            try {
-                transformedPoint = at.inverseTransform(e.getPoint(), null);
-            } catch (NoninvertibleTransformException te) {
-                return;
-            }
+		if (mouseCoords == null
+				|| !game.getMap().getEmptyTiles().contains(mouseCoords)) {
+			return;
+		}
 
-            // save point as last clicked point
-            lastClicked = transformedPoint;
-            // save reference coordinates for panning
-            referenceX = transformedPoint.getX();
-            referenceY = transformedPoint.getY();
-            // save transform for later use
-            initialTransform = at;
-        }
+		if (game.getMap().checkTile(mouseCoords, tile)) {
+			graphics.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.6f));
+		} else {
+			graphics.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.25f));
+		}
 
-        /**
-         * Invoked when a mouse button is pressed on the component and the mouse
-         * is dragged.
-         * 
-         * @param e
-         *            Mouse event for this action
-         */
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            // transform new point into map coordinates
-            try {
-                transformedPoint = initialTransform.inverseTransform(
-                        e.getPoint(), null);
-            } catch (NoninvertibleTransformException te) {
-                return;
-            }
+		paintTile(graphics, tile, mouseCoords);
 
-            // calculate the dragged distance along each axis
-            double deltaX = transformedPoint.getX() - referenceX;
-            double deltaY = transformedPoint.getY() - referenceY;
+		graphics.setComposite(comp);
+	}
 
-            // update the reference point
-            referenceX = transformedPoint.getX();
-            referenceY = transformedPoint.getY();
+	/**
+	 * Paints all zombies on the map.
+	 * 
+	 * @param graphics
+	 *            graphics object that handles the painting
+	 */
+	private void paintCurrentZombie(Graphics2D graphics) {
+		// draw a border around the current zombie if there is one
+		if (game.getCurrentZombie() != null) {
+			ICoordinates coords = game.getCurrentZombie().getCoordinates();
+			Stroke stroke = graphics.getStroke();
 
-            // translate according to movement
-            translateX += deltaX;
-            translateY += deltaY;
+			// draw a red border around the current zombie
+			graphics.setColor(Color.GREEN);
+			graphics.setStroke(new BasicStroke(5));
 
-            // and repaint
-            repaint();
-        }
+			drawSquare(graphics, coords, Field.FIELD_SIZE);
 
-        /**
-         * Invoked after the mouse is released; unused in this class.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        public void mouseClicked(MouseEvent e) {
-        }
+			graphics.setStroke(stroke);
+		}
+	}
 
-        /**
-         * Invoked when the mouse enters the component; unused in this class.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        public void mouseEntered(MouseEvent e) {
-        }
+	/**
+	 * Paints all the players onto the map.
+	 * 
+	 * @param graphics
+	 *            graphics object that handles the actual painting
+	 */
+	private void paintPlayers(Graphics2D graphics) {
+		HashMap<ICoordinates, LinkedList<Color>> colorMap = new HashMap<>();
 
-        /**
-         * Invoked when the mouse exits the component; unused in this class.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        public void mouseExited(MouseEvent e) {
-        }
+		// iterate through players and add their color to their coordinates
+		for (IPlayer player : game.getPlayers()) {
+			ICoordinates coords = player.getCoordinates();
 
-        /**
-         * Invoked when the mouse is moved inside the component; unused in this
-         * class.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        public void mouseMoved(MouseEvent e) {
-        }
+			if (colorMap.get(coords) == null) {
+				colorMap.put(coords, new LinkedList<Color>());
+			}
 
-        /**
-         * Invoked when the mouse is released; unused in this class.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        public void mouseReleased(MouseEvent e) {
-        }
-    }
+			colorMap.get(coords).add(player.getColor());
+		}
 
-    /**
-     * Handles scaling of the map view.
-     * 
-     * @author Buddy Jonte
-     * 
-     */
-    private class ScaleHandler implements MouseWheelListener {
-        /**
-         * Maximum scale of the map.
-         */
-        private static final double MAX_SCALE = 2.0;
-        /**
-         * Minimum scale of the map.
-         */
-        private static final double MIN_SCALE = 0.1;
-        /**
-         * Factor by which the map is scaled after a mouse wheel movement.
-         */
-        private static final double SCALE_FACTOR = 1.1;
+		// for each point that has at least one player, paint their circles or
+		// arcs
+		for (Map.Entry<ICoordinates, LinkedList<Color>> entry : colorMap
+				.entrySet()) {
+			ICoordinates coords = entry.getKey();
+			// defines the position of the player on the arc
+			int i = 0;
+			// defines the arc size for one player at these coordinates
+			int size = 360 / entry.getValue().size();
+			int x = coords.toTile().getX() * Tile.TILE_SIZE
+					+ coords.toRelativeField().getX() * Field.FIELD_SIZE + 40;
+			int y = coords.toTile().getY() * Tile.TILE_SIZE
+					+ coords.toRelativeField().getY() * Field.FIELD_SIZE + 40;
 
-        /**
-         * Invoked when the mouse wheel is moved over the component. Adjusts the
-         * map scale accordingly.
-         * 
-         * @param e
-         *            corresponding mouse event
-         */
-        @Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            double newScale;
+			// draw the arc for each player (each color)
+			for (Color color : entry.getValue()) {
+				graphics.setColor(color);
+				graphics.fillArc(x, y, Field.FIELD_SIZE - 80,
+						Field.FIELD_SIZE - 80, i * size, size);
+				i++;
+			}
+		}
+	}
 
-            // check the mouse wheel direction
-            if (e.getWheelRotation() > 0) {
-                newScale = scale / SCALE_FACTOR;
-            } else {
-                newScale = scale * SCALE_FACTOR;
-            }
+	public void paintDim(Graphics2D graphics) {
+		Composite comp = graphics.getComposite();
+		AlphaComposite dimAlpha = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OVER, 0.6f);
 
-            // set the new scale
-            scale = newScale;
-            // and make sure it is within bounds
-            scale = Math.max(MIN_SCALE, scale);
-            scale = Math.min(MAX_SCALE, scale);
+		for (ITile tile : game.getMap().getTiles()) {
+			for (int i = 0; i < 9; i++) {
+				IField field = tile.getField(i / 3, i % 3);
+				IZombie zombie = field.getZombie();
+				ICoordinates coords = field.getCoordinates();
 
-            // then repaint the map
-            repaint();
-        }
-    }
+				if (game.getCurrentState() instanceof FightState
+						&& !coords.equals(game.getCurrentPlayer()
+								.getCoordinates())) {
+					graphics.setComposite(dimAlpha);
+					graphics.setColor(Color.black);
+					fillRect(graphics, coords, Field.FIELD_SIZE,
+							Field.FIELD_SIZE);
+					graphics.setComposite(comp);
+				}
+
+				// highlight movable zombies
+				if (game.getCurrentState() instanceof ZombieState
+						&& game.getCurrentPlayer().hasRolledZombie()) {
+					ZombieMode mode = ((ZombieState) game.getCurrentState())
+							.getZombieMode();
+					IZombie current = game.getCurrentZombie();
+					boolean neighbor = false;
+
+					if (current != null) {
+						for (IDirection dir : Direction.values()) {
+							IField next = game.getMap().getField(
+									coords.getDir(dir));
+
+							if (field.hasDir(dir) && next != null
+									&& zombie == null
+									&& current.equals(next.getZombie())) {
+								neighbor = true;
+							}
+						}
+					}
+
+					if (mode.equals(ZombieMode.Move)
+							&& (!game.canZombieMove(zombie) || (current != null && !current
+									.equals(zombie))) && !neighbor) {
+						graphics.setComposite(dimAlpha);
+						graphics.setColor(Color.black);
+
+						fillSquare(graphics, coords, Field.FIELD_SIZE);
+
+						graphics.setComposite(comp);
+					}
+
+					if (mode.equals(ZombieMode.Place)
+							&& (zombie != null || !field.getType().equals(
+									"building"))) {
+						graphics.setComposite(dimAlpha);
+						graphics.setColor(Color.black);
+
+						fillSquare(graphics, coords, Field.FIELD_SIZE);
+
+						graphics.setComposite(comp);
+					}
+				}
+			}
+		}
+	}
+
+	private void fillSquare(Graphics2D graphics, ICoordinates coords, int size) {
+		fillRect(graphics, coords, size, size);
+	}
+
+	private void fillRect(Graphics2D graphics, ICoordinates coords, int width,
+			int height) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
+
+		graphics.fillRect(tile.getX() * Tile.TILE_SIZE + field.getX()
+				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
+				* Field.FIELD_SIZE, width, height);
+	}
+
+	private void drawSquare(Graphics2D graphics, ICoordinates coords, int size) {
+		drawRect(graphics, coords, size, size);
+	}
+
+	private void drawRect(Graphics2D graphics, ICoordinates coords, int width,
+			int height) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
+
+		graphics.drawRect(tile.getX() * Tile.TILE_SIZE + field.getX()
+				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
+				* Field.FIELD_SIZE, width, height);
+	}
+
+	private void drawImage(Graphics2D graphics, Image image, ICoordinates coords) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
+
+		graphics.drawImage(image, tile.getX() * Tile.TILE_SIZE + field.getX()
+				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
+				* Field.FIELD_SIZE, null);
+	}
+
+	/**
+	 * Defines this component's preferred size.
+	 * 
+	 * @return preferred size
+	 */
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(2000, 2000);
+	}
+
+	/**
+	 * Gets the last point clicked on the map.
+	 * 
+	 * @return last clicked point
+	 */
+	public Point2D getLastPoint() {
+		return lastClicked;
+	}
+
+	/**
+	 * Sets the last clicked point for testing purposes.
+	 * 
+	 * @param last
+	 *            new point
+	 */
+	public void setLastPoint(Point2D last) {
+		lastClicked = last;
+	}
+
+	/**
+	 * Handles panning of the map view.
+	 * 
+	 * @author Buddy Jonte
+	 * 
+	 */
+	private class PanningHandler implements MouseListener, MouseMotionListener {
+		/**
+		 * Reference x coordinate; defines where the user initiated the panning
+		 * action.
+		 */
+		private double referenceX;
+		/**
+		 * Reference y coordinate; defines where the user initiated the panning
+		 * action.
+		 */
+		private double referenceY;
+		/**
+		 * Transform that was valid at the beginning of the panning.
+		 */
+		private AffineTransform initialTransform;
+
+		/**
+		 * Invoked when a mouse button has been pressed on the map.
+		 * 
+		 * @param e
+		 *            Mouse event for this action
+		 */
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// transform the clicked point into map coordinates
+			try {
+				transformedPoint = at.inverseTransform(e.getPoint(), null);
+			} catch (NoninvertibleTransformException te) {
+				return;
+			}
+
+			// save point as last clicked point
+			lastClicked = transformedPoint;
+			// save reference coordinates for panning
+			referenceX = transformedPoint.getX();
+			referenceY = transformedPoint.getY();
+			// save transform for later use
+			initialTransform = at;
+		}
+
+		/**
+		 * Invoked when a mouse button is pressed on the component and the mouse
+		 * is dragged.
+		 * 
+		 * @param e
+		 *            Mouse event for this action
+		 */
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// transform new point into map coordinates
+			try {
+				transformedPoint = initialTransform.inverseTransform(
+						e.getPoint(), null);
+			} catch (NoninvertibleTransformException te) {
+				return;
+			}
+
+			// calculate the dragged distance along each axis
+			double deltaX = transformedPoint.getX() - referenceX;
+			double deltaY = transformedPoint.getY() - referenceY;
+
+			// update the reference point
+			referenceX = transformedPoint.getX();
+			referenceY = transformedPoint.getY();
+
+			// translate according to movement
+			translateX += deltaX;
+			translateY += deltaY;
+
+			// and repaint
+			repaint();
+		}
+
+		/**
+		 * Invoked after the mouse is released; unused in this class.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		/**
+		 * Invoked when the mouse enters the component; unused in this class.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		/**
+		 * Invoked when the mouse exits the component; unused in this class.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		public void mouseExited(MouseEvent e) {
+			mouseCoords = null;
+			repaint();
+		}
+
+		/**
+		 * Invoked when the mouse is moved inside the component; unused in this
+		 * class.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		public void mouseMoved(MouseEvent e) {
+			if (at == null) {
+				return;
+			}
+
+			// transform new point into map coordinates
+			try {
+				mouseCoords = Coordinates.tileFromPoint(at.inverseTransform(
+						e.getPoint(), null));
+			} catch (NoninvertibleTransformException te) {
+				return;
+			}
+
+			repaint();
+		}
+
+		/**
+		 * Invoked when the mouse is released; unused in this class.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		public void mouseReleased(MouseEvent e) {
+		}
+	}
+
+	/**
+	 * Handles scaling of the map view.
+	 * 
+	 * @author Buddy Jonte
+	 * 
+	 */
+	private class ScaleHandler implements MouseWheelListener {
+		/**
+		 * Maximum scale of the map.
+		 */
+		private static final double MAX_SCALE = 2.0;
+		/**
+		 * Minimum scale of the map.
+		 */
+		private static final double MIN_SCALE = 0.1;
+		/**
+		 * Factor by which the map is scaled after a mouse wheel movement.
+		 */
+		private static final double SCALE_FACTOR = 1.1;
+
+		/**
+		 * Invoked when the mouse wheel is moved over the component. Adjusts the
+		 * map scale accordingly.
+		 * 
+		 * @param e
+		 *            corresponding mouse event
+		 */
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			double newScale;
+
+			// check the mouse wheel direction
+			if (e.getWheelRotation() > 0) {
+				newScale = scale / SCALE_FACTOR;
+			} else {
+				newScale = scale * SCALE_FACTOR;
+			}
+
+			// set the new scale
+			scale = newScale;
+			// and make sure it is within bounds
+			scale = Math.max(MIN_SCALE, scale);
+			scale = Math.min(MAX_SCALE, scale);
+
+			// then repaint the map
+			repaint();
+		}
+	}
 }
