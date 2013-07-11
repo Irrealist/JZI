@@ -732,8 +732,8 @@ public class Game extends Observable implements IGame {
 			surrender();
 		}
 
-		setChanged();
-		notifyObservers(Update.PlayerAttributeUpdate);
+		update(Update.PlayerAttributeUpdate);
+		update(Update.PlayerChange);
 	}
 
 	/**
