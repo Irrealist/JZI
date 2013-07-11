@@ -71,7 +71,7 @@ public class Window extends JFrame implements Observer, IWindow {
 					+ e.getMessage());
 		}
 
-		setTitle("Java Zombie Invasion");
+		setTitle("Java Zombie Invasion v1.1");
 		setSize(new Dimension(1000, 800));
 		setMinimumSize(new Dimension(640, 480));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
