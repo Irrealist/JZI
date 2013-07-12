@@ -6,7 +6,6 @@ import jzi.model.game.Game;
 import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
 import jzi.model.map.IField;
-import jzi.view.DieGraphic;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
 
@@ -115,8 +114,9 @@ public class ZombieState implements IState {
 		menu.getPlaceZombieButton().setEnabled(false);
 		menu.getContinueButton().setEnabled(false);
 		menu.getRollDieButton().setEnabled(false);
-		menu.getDie().setIcon(null);
+
 		game.setCurrentZombie(null);
+		game.setDie(0);
 	}
 
 	/**
@@ -163,10 +163,10 @@ public class ZombieState implements IState {
 		} else if (mode.equals(ZombieMode.Place)) {
 			game.placeZombie(field);
 		}
-		
+
 		updateMode();
 
-		menu.getDie().setIcon(DieGraphic.getDiefromInt(player.getZombies()));
+		game.setDie(player.getZombies());
 
 		// disable radio button if player can't place zombies any more
 		if (player.getZombies() < Game.ZOMBIE_PLACE_COST) {
