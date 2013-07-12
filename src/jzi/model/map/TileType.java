@@ -1,5 +1,6 @@
 package jzi.model.map;
 
+
 /**
  * Defines a Type of Tile.
  * 
@@ -224,7 +225,7 @@ public class TileType implements ITileType {
      * @return image file name
      */
     @Override
-    public final String getFileName() {
+    public String getFileName() {
         return fileName;
     }
 
@@ -235,7 +236,7 @@ public class TileType implements ITileType {
      *            new file name
      */
     @Override
-    public final void setFileName(final String fileName) {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 }

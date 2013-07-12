@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -17,6 +16,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import jzi.Resource;
 import jzi.model.entities.IPlayer;
 import jzi.model.game.IGame;
 
@@ -60,8 +60,7 @@ public class Table extends JTable {
 	 * @param zombieImage
 	 * @param game
 	 */
-	public Table(DefaultTableModel dtm, BufferedImage ammoImage,
-			BufferedImage lifeImage, BufferedImage zombieImage, IGame game) {
+	public Table(DefaultTableModel dtm, IGame game) {
 		super(dtm);
 		this.game = game;
 		setDefaultRenderer(Object.class, new ColorTableCellRenderer());
@@ -69,9 +68,13 @@ public class Table extends JTable {
 		header.setReorderingAllowed(false);
 		header.setDefaultRenderer(new ImageHeaderCellRenderer());
 
-		scaleAmmoImage = ammoImage.getScaledInstance(30, 30, 0);
-		scaleLifeImage = lifeImage.getScaledInstance(30, 30, 0);
-		scaleZombieImage = zombieImage.getScaledInstance(30, 30, 0);
+		scaleAmmoImage = Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png")
+				.getScaledInstance(30, 30, 0);
+		scaleLifeImage = Resource.getImage(Resource.OBJ_FOLDER + "Life.png")
+				.getScaledInstance(30, 30, 0);
+		scaleZombieImage = Resource
+				.getImage(Resource.OBJ_FOLDER + "Zombie.png")
+				.getScaledInstance(30, 30, 0);
 
 	}
 

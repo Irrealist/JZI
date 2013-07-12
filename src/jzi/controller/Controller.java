@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import jzi.Resource;
 import jzi.controller.state.FightState;
 import jzi.controller.state.TileState;
 import jzi.controller.state.ZombieMode;
@@ -98,12 +98,8 @@ public class Controller implements IController {
 				String[] die = { "one", "two", "three", "four", "five", "six" };
 
 				for (int n = 0; n < die.length; n++) {
-					try {
-						new DieGraphic(ImageIO.read(new File("./data/img/die/"
-								+ die[n] + ".png")), n + 1);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					new DieGraphic(Resource.getImage(Resource.DIE_FOLDER
+							+ die[n] + ".png"), n + 1);
 				}
 			}
 		}).start();
