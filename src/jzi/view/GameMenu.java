@@ -561,6 +561,7 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof PlayerState) {
+				mapPane.focus(game.getCurrentPlayer().getCoordinates());
 				state.setText(Language.get("game.mode.move"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
