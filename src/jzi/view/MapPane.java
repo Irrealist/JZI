@@ -18,17 +18,14 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import jzi.Resource;
 import jzi.controller.state.FightState;
 import jzi.controller.state.ZombieMode;
 import jzi.controller.state.ZombieState;
@@ -82,22 +79,6 @@ public class MapPane extends JPanel {
 	 */
 	private double scale;
 	/**
-	 * Image used for ammunition.
-	 */
-	private BufferedImage ammoImage;
-	/**
-	 * Image used for life points.
-	 */
-	private BufferedImage lifeImage;
-	/**
-	 * Image used for zombies.
-	 */
-	private BufferedImage zombieImage;
-	/**
-	 * Image user for super zombies.
-	 */
-	private BufferedImage superZombieImage;
-	/**
 	 * Clicked point transformed to image coordinates.
 	 */
 	private Point2D transformedPoint;
@@ -110,6 +91,8 @@ public class MapPane extends JPanel {
 	 */
 	private ICoordinates mouseCoords;
 
+	private HashMap<IDirection, Double> rotateMap;
+
 	/**
 	 * Constructor with game instance, initializes transform attributes and
 	 * loads images.
@@ -120,37 +103,19 @@ public class MapPane extends JPanel {
 	 * @param ammoImage2
 	 * @param lifeImage
 	 */
-	public MapPane(IGame game, BufferedImage lifeImage,
-			BufferedImage ammoImage, BufferedImage zombieImage) {
+	public MapPane(IGame game) {
 		super();
 		this.game = game;
 		translateX = 0;
 		translateY = 0;
 		scale = START_SCALE;
-		this.ammoImage = ammoImage;
-		this.lifeImage = lifeImage;
-		this.zombieImage = zombieImage;
 
-		try {
-			AffineTransform scaleTransform = new AffineTransform();
-			AffineTransformOp scaleOp;
+		rotateMap = new HashMap<>();
 
-			scaleTransform
-					.scale(Tile.TILE_SIZE / 800.0, Tile.TILE_SIZE / 800.0);
-
-			scaleOp = new AffineTransformOp(scaleTransform,
-					AffineTransformOp.TYPE_BILINEAR);
-
-			superZombieImage = ImageIO.read(new File(
-					"./data/img/obj/SuperZombie.png"));
-
-			ammoImage = scaleOp.filter(ammoImage, null);
-			lifeImage = scaleOp.filter(lifeImage, null);
-			zombieImage = scaleOp.filter(zombieImage, null);
-			superZombieImage = scaleOp.filter(superZombieImage, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		rotateMap.put(Direction.UP, Math.toRadians(0));
+		rotateMap.put(Direction.RIGHT, Math.toRadians(90));
+		rotateMap.put(Direction.DOWN, Math.toRadians(180));
+		rotateMap.put(Direction.LEFT, Math.toRadians(-90));
 
 		PanningHandler panning = new PanningHandler();
 
@@ -241,12 +206,27 @@ public class MapPane extends JPanel {
 	 *            graphics object that handles the actual painting
 	 * @param tile
 	 *            tile to be painted
+	 * @param coords
+	 *            coordinates to paint tile at
 	 */
 	private void paintTile(Graphics2D graphics, ITile tile, ICoordinates coords) {
-		BufferedImage image = TileGraphic.getRenderImage(tile);
+		BufferedImage image = Resource.getImage(Resource.TILE_FOLDER
+				+ tile.getTileType().getFileName());
+		AffineTransform preTransform = graphics.getTransform();
+		AffineTransform rotate = new AffineTransform(preTransform);
+		int rotateX = coords.getX() * Tile.TILE_SIZE + Tile.TILE_SIZE / 2;
+		int rotateY = coords.getY() * Tile.TILE_SIZE + Tile.TILE_SIZE / 2;
+
+		rotate.translate(rotateX, rotateY);
+		rotate.rotate(rotateMap.get(tile.getRotation()));
+		rotate.translate(-rotateX, -rotateY);
+
+		graphics.setTransform(rotate);
 
 		// draw the tile image
 		drawImage(graphics, image, coords.toField());
+
+		graphics.setTransform(preTransform);
 
 		// draw objects on each field
 		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
@@ -263,22 +243,28 @@ public class MapPane extends JPanel {
 
 		// draw ammunition
 		if (field.hasAmmo()) {
-			drawImage(graphics, ammoImage, coords);
+			drawImage(graphics,
+					Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png"), coords);
 		}
 
 		// draw life points
 		if (field.hasLife()) {
-			drawImage(graphics, lifeImage, coords);
+			drawImage(graphics,
+					Resource.getImage(Resource.OBJ_FOLDER + "Life.png"), coords);
 		}
 
 		// draw zombie if there is one
 		if (zombie instanceof Zombie) {
-			drawImage(graphics, zombieImage, coords);
+			drawImage(graphics,
+					Resource.getImage(Resource.OBJ_FOLDER + "Zombie.png"),
+					coords);
 		}
 
 		// draw super zombie if there is one
 		if (zombie instanceof SuperZombie) {
-			drawImage(graphics, superZombieImage, coords);
+			drawImage(graphics,
+					Resource.getImage(Resource.OBJ_FOLDER + "SuperZombie.png"),
+					coords);
 		}
 	}
 
@@ -400,7 +386,7 @@ public class MapPane extends JPanel {
 		}
 	}
 
-	public void paintDim(Graphics2D graphics) {
+	private void paintDim(Graphics2D graphics) {
 		Composite comp = graphics.getComposite();
 		AlphaComposite dimAlpha = AlphaComposite.getInstance(
 				AlphaComposite.SRC_OVER, 0.6f);

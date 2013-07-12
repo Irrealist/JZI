@@ -1,6 +1,5 @@
 package jzi.view;
 
-import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,14 +11,12 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.HashMap;
 
 import net.miginfocom.swing.MigLayout;
+import jzi.Resource;
 import jzi.controller.state.FightState;
 import jzi.controller.state.IState;
 import jzi.controller.state.PlayerState;
@@ -177,18 +174,6 @@ public class GameMenu implements Menu {
 	 */
 	private JPanel infoPane = new JPanel();
 	/**
-	 * Image of an ammo.
-	 */
-	private BufferedImage ammoImage = null;
-	/**
-	 * Image of a life.
-	 */
-	private BufferedImage lifeImage = null;
-	/**
-	 * Image of a zombie.
-	 */
-	private BufferedImage zombieImage = null;
-	/**
 	 * The window of the program.
 	 */
 	private IWindow window;
@@ -212,7 +197,6 @@ public class GameMenu implements Menu {
 		this.window = window;
 
 		createUpdateMap();
-		readImages();
 		setLayouts();
 		createLabelsandButtons(game);
 		setIcons();
@@ -243,7 +227,7 @@ public class GameMenu implements Menu {
 
 		addToPanel();
 
-		mapPane = new MapPane(game, lifeImage, ammoImage, zombieImage);
+		mapPane = new MapPane(game);
 		mapPane.addMouseListener(window.getMouseListener(Action.Map));
 
 		gameMenu.add(mapPane, "span 1 8");
@@ -354,19 +338,6 @@ public class GameMenu implements Menu {
 	}
 
 	/**
-	 * Loads images to be used in the game.
-	 */
-	private void readImages() {
-		try {
-			ammoImage = ImageIO.read(new File("./data/img/obj/Ammo.png"));
-			lifeImage = ImageIO.read(new File("./data/img/obj//Life.png"));
-			zombieImage = ImageIO.read(new File("./data/img/obj/Zombie.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * create Labels and Buttons.
 	 * 
 	 * @param game
@@ -410,15 +381,13 @@ public class GameMenu implements Menu {
 					Language.get("game.player.color"), "", "", "",
 					Language.get("game.player.revives") };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
-					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
-					game);
+					.getPlayers().size()), game);
 
 		} else {
 			Object[] columnNames = { Language.get("game.player.name"),
 					Language.get("game.player.color"), "", "", "" };
 			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
-					.getPlayers().size()), ammoImage, lifeImage, zombieImage,
-					game);
+					.getPlayers().size()), game);
 		}
 		scrollPane = new JScrollPane(allPlayerTable);
 	}
@@ -427,9 +396,13 @@ public class GameMenu implements Menu {
 	 * set Icons to Lables.
 	 */
 	private void setIcons() {
-		Image scaleAmmoImage = ammoImage.getScaledInstance(30, 30, 0);
-		Image scaleLifeImage = lifeImage.getScaledInstance(30, 30, 0);
-		Image scaleZombieImage = zombieImage.getScaledInstance(30, 30, 0);
+		Image scaleAmmoImage = Resource.getImage(
+				Resource.OBJ_FOLDER + "Ammo.png").getScaledInstance(30, 30, 0);
+		Image scaleLifeImage = Resource.getImage(
+				Resource.OBJ_FOLDER + "Life.png").getScaledInstance(30, 30, 0);
+		Image scaleZombieImage = Resource.getImage(
+				Resource.OBJ_FOLDER + "Zombie.png")
+				.getScaledInstance(30, 30, 0);
 
 		lifeIcon.setIcon(new ImageIcon(scaleLifeImage));
 		ammoIcon.setIcon(new ImageIcon(scaleAmmoImage));
@@ -582,7 +555,11 @@ public class GameMenu implements Menu {
 			if (tile == null) {
 				tileStack.setIcon(null);
 			} else {
-				tileStack.setIcon(TileGraphic.getIcon(tile));
+				tileStack.setIcon(new ImageIcon(Resource
+						.getImage(
+								Resource.TILE_FOLDER
+										+ tile.getTileType().getFileName())
+						.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 			}
 
 			drawTile.setEnabled(false);
@@ -603,7 +580,10 @@ public class GameMenu implements Menu {
 		@Override
 		public void execute(Observable o) {
 			ITile tile = ((Game) o).getCurrentTile();
-			tileStack.setIcon(TileGraphic.getIcon(tile));
+
+			tileStack.setIcon(new ImageIcon(Resource.getImage(
+					Resource.TILE_FOLDER + tile.getTileType().getFileName())
+					.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 		}
 	}
 
