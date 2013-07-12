@@ -185,6 +185,8 @@ public class MapPane extends JPanel {
 		graphics.setTransform(transformBackup);
 
 		paintTileOverlay(graphics);
+
+		paintDie(graphics);
 	}
 
 	/**
@@ -490,6 +492,34 @@ public class MapPane extends JPanel {
 		graphics.setTransform(scaleTransform);
 
 		paintTile(graphics, tile, point);
+
+		graphics.setTransform(transform);
+	}
+
+	private void paintDie(Graphics2D graphics) {
+		AffineTransform transform = graphics.getTransform();
+		AffineTransform scaleTransform = new AffineTransform(transform);
+		Point point = new Point();
+		BufferedImage image = null;
+
+		if (game.getDie() == 0) {
+			return;
+		}
+
+		scaleTransform.scale(150d / 800, 150d / 800);
+
+		try {
+			point.setLocation(scaleTransform.inverseTransform(
+					new Point(10, 10), null));
+		} catch (NoninvertibleTransformException ex) {
+			System.out.println("Couldn't transform point");
+		}
+
+		graphics.setTransform(scaleTransform);
+
+		image = Resource.getImage(Resource.DIE_FOLDER + game.getDie() + ".png");
+
+		drawImage(graphics, image, point);
 
 		graphics.setTransform(transform);
 	}

@@ -149,10 +149,6 @@ public class GameMenu implements Menu {
 	 */
 	private JRadioButton placeZombie;
 	/**
-	 * Label containing the die value.
-	 */
-	private JLabel die;
-	/**
 	 * Label for the player's ammunition.
 	 */
 	private JLabel ammo;
@@ -204,8 +200,6 @@ public class GameMenu implements Menu {
 		cont.setEnabled(false);
 		moveZombie.setEnabled(false);
 		placeZombie.setEnabled(false);
-
-		die.setPreferredSize(new Dimension(100, 100));
 
 		LinkedList<IPlayer> players = game.getPlayers();
 		for (int n = 0; n < players.size(); n++) {
@@ -274,7 +268,7 @@ public class GameMenu implements Menu {
 		fightPanel.add(useLife);
 
 		rollPanel.add(rollDie, "wrap");
-		rollPanel.add(die, "wrap");
+
 		allPlayerPanel.setMinimumSize(new Dimension(250, 150));
 		allPlayerPanel.add(scrollPane);
 
@@ -345,7 +339,6 @@ public class GameMenu implements Menu {
 		cont = new JButton();
 		moveZombie = new JRadioButton("", true);
 		placeZombie = new JRadioButton("", false);
-		die = new JLabel();
 		createTable();
 		lifeIcon = new JLabel();
 		ammoIcon = new JLabel();
@@ -448,15 +441,6 @@ public class GameMenu implements Menu {
 	}
 
 	/**
-	 * Gets the die value label.
-	 * 
-	 * @return label
-	 */
-	public JLabel getDie() {
-		return die;
-	}
-
-	/**
 	 * Gets the "draw tile" button.
 	 * 
 	 * @return button
@@ -523,11 +507,7 @@ public class GameMenu implements Menu {
 					game.getRevives() - player.getRevives()));
 		}
 
-		if (game.getCurrentState() instanceof PlayerState) {
-			die.setIcon(DieGraphic.getDiefromInt(player.getSteps()));
-		} else if (game.getCurrentState() instanceof ZombieState) {
-			die.setIcon(DieGraphic.getDiefromInt(player.getZombies()));
-		}
+		mapPane.repaint();
 	}
 
 	/**
@@ -542,7 +522,7 @@ public class GameMenu implements Menu {
 			drawTile.setEnabled(false);
 			rotateLeft.setEnabled(true);
 			rotateRight.setEnabled(true);
-			
+
 			mapPane.repaint();
 		}
 	}
@@ -620,8 +600,8 @@ public class GameMenu implements Menu {
 	private class DieRolledUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			die.setIcon(DieGraphic.getDiefromInt(((Game) o).getDie()));
 			rollDie.setEnabled(false);
+			mapPane.repaint();
 		}
 	}
 

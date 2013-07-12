@@ -39,7 +39,6 @@ import jzi.model.map.Coordinates;
 import jzi.model.map.ITile;
 import jzi.view.Action;
 import jzi.view.SetupMenu;
-import jzi.view.DieGraphic;
 import jzi.view.GameMenu;
 import jzi.view.IWindow;
 import jzi.view.MainMenu;
@@ -95,11 +94,8 @@ public class Controller implements IController {
 
 		new Thread(new Runnable() {
 			public void run() {
-				String[] die = { "one", "two", "three", "four", "five", "six" };
-
-				for (int n = 0; n < die.length; n++) {
-					new DieGraphic(Resource.getImage(Resource.DIE_FOLDER
-							+ die[n] + ".png"), n + 1);
+				for (int n = 1; n < 7; n++) {
+					Resource.loadImage(Resource.DIE_FOLDER + n + ".png");
 				}
 			}
 		}).start();
@@ -658,9 +654,7 @@ public class Controller implements IController {
 					.setAmmo(
 							game.getCurrentPlayer().getAmmo()
 									- game.getDieDifference());
-			((GameMenu) window.getMenu()).getDie().setIcon(
-					DieGraphic.getDiefromInt(game.getDie()
-							+ game.getDieDifference()));
+			game.setDie(game.getDie() + game.getDieDifference());
 
 			((FightState) game.getCurrentState()).fightWon(game
 					.getCurrentPlayer());
@@ -677,7 +671,7 @@ public class Controller implements IController {
 	class UseLifeAction implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-
+			game.setDie(0);
 			game.getCurrentPlayer().setLives(
 					game.getCurrentPlayer().getLives() - 1);
 			game.update(Update.PlayerAttributeUpdate);
@@ -686,7 +680,6 @@ public class Controller implements IController {
 				game.setState(new ZombieState(window));
 				game.revive();
 			} else {
-				((GameMenu) window.getMenu()).getDie().setIcon(null);
 				((GameMenu) window.getMenu()).getRollDieButton().setEnabled(
 						true);
 				game.update(Update.FightPanelUpdate);

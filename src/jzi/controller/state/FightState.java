@@ -78,11 +78,11 @@ public class FightState implements IState {
     }
 
     /**
-     * Performs state tear down, resets the die icon.
+     * Tear down, resets die.
      */
     @Override
     public void exit() {
-        menu.getDie().setIcon(null);
+    	game.setDie(0);
     }
 
     /**
