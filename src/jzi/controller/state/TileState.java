@@ -1,9 +1,5 @@
 package jzi.controller.state;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
-
 import jzi.model.game.IGame;
 import jzi.model.map.ICoordinates;
 import jzi.view.GameMenu;
@@ -90,8 +86,6 @@ public class TileState implements IState {
 		menu.getDrawTileButton().setEnabled(false);
 		menu.getRotateLeftButton().setEnabled(false);
 		menu.getRotateRightButton().setEnabled(false);
-		menu.getTileStack().setIcon(null);
-		menu.getTileStack().setBorder(null);
 	}
 
 	/**
@@ -142,7 +136,5 @@ public class TileState implements IState {
 		menu.getRotateRightButton().setEnabled(false);
 		menu.getContinueButton().setEnabled(true);
 		menu.getDrawTileButton().setEnabled(false);
-		menu.getTileStack().setBorder(
-				BorderFactory.createLineBorder(Color.RED, 2));
 	}
 }

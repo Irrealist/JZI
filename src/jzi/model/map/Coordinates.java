@@ -37,7 +37,7 @@ public class Coordinates implements ICoordinates {
 		this.y = y;
 	}
 
-	public static Point2D pointFromField(ICoordinates coords) {
+	public static Point pointFromField(ICoordinates coords) {
 		ICoordinates tile = coords.toTile();
 		ICoordinates field = coords.toRelativeField();
 		int x = tile.getX() * Tile.TILE_SIZE + field.getX() * Field.FIELD_SIZE;
