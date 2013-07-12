@@ -1,5 +1,6 @@
 package jzi.model.map;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
@@ -34,6 +35,15 @@ public class Coordinates implements ICoordinates {
 	public Coordinates(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public static Point2D pointFromField(ICoordinates coords) {
+		ICoordinates tile = coords.toTile();
+		ICoordinates field = coords.toRelativeField();
+		int x = tile.getX() * Tile.TILE_SIZE + field.getX() * Field.FIELD_SIZE;
+		int y = tile.getY() * Tile.TILE_SIZE + field.getY() * Field.FIELD_SIZE;
+
+		return new Point(x, y);
 	}
 
 	/**
