@@ -164,9 +164,9 @@ public class ZombieState implements IState {
 			game.placeZombie(field);
 		}
 
-		updateMode();
-
 		game.setDie(player.getZombies());
+
+		updateMode();
 
 		// disable radio button if player can't place zombies any more
 		if (player.getZombies() < Game.ZOMBIE_PLACE_COST) {
