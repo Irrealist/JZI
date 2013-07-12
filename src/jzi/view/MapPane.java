@@ -509,8 +509,8 @@ public class MapPane extends JPanel {
 		scaleTransform.scale(150d / 800, 150d / 800);
 
 		try {
-			point.setLocation(scaleTransform.inverseTransform(new Point(10,
-					getHeight() - 160), null));
+			point.setLocation(scaleTransform.inverseTransform(
+					new Point(10, 10), null));
 		} catch (NoninvertibleTransformException ex) {
 			System.out.println("Couldn't transform point");
 		}
