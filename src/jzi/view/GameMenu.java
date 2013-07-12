@@ -25,7 +25,6 @@ import jzi.controller.state.ZombieState;
 import jzi.model.entities.IPlayer;
 import jzi.model.game.Game;
 import jzi.model.game.IGame;
-import jzi.model.map.ITile;
 
 /**
  * GUI class for the game screen.
@@ -101,10 +100,6 @@ public class GameMenu implements Menu {
 	 * Icon for zombie kills.
 	 */
 	private JLabel zombieIcon;
-	/**
-	 * Label for the current tile.
-	 */
-	private JLabel tileStack = new JLabel();
 	/**
 	 * Label for the number of points.
 	 */
@@ -210,7 +205,6 @@ public class GameMenu implements Menu {
 		moveZombie.setEnabled(false);
 		placeZombie.setEnabled(false);
 
-		tileStack.setPreferredSize(new Dimension(150, 150));
 		die.setPreferredSize(new Dimension(100, 100));
 
 		LinkedList<IPlayer> players = game.getPlayers();
@@ -287,7 +281,6 @@ public class GameMenu implements Menu {
 		movePanel.add(moveZombie);
 		movePanel.add(placeZombie, "wrap");
 
-		tilePanel.add(tileStack, "wrap");
 		tilePanel.add(drawTile, "wrap");
 		tilePanel.add(rotateLeft, "wrap");
 		tilePanel.add(rotateRight, "wrap");
@@ -472,10 +465,6 @@ public class GameMenu implements Menu {
 		return drawTile;
 	}
 
-	public JLabel getTileStack() {
-		return tileStack;
-	}
-
 	public JButton getRotateLeftButton() {
 		return rotateLeft;
 	}
@@ -550,23 +539,11 @@ public class GameMenu implements Menu {
 	private class TileDrawnUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			ITile tile = ((Game) o).getCurrentTile();
-
-			if (tile == null) {
-				tileStack.setIcon(null);
-			} else {
-				tileStack.setIcon(new ImageIcon(Resource
-						.getImage(
-								Resource.TILE_FOLDER
-										+ tile.getTileType().getFileName())
-						.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
-			}
-
 			drawTile.setEnabled(false);
 			rotateLeft.setEnabled(true);
 			rotateRight.setEnabled(true);
-			gameMenu.revalidate();
-			gameMenu.repaint();
+			
+			mapPane.repaint();
 		}
 	}
 
@@ -579,11 +556,7 @@ public class GameMenu implements Menu {
 	private class TileRotatedUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			ITile tile = ((Game) o).getCurrentTile();
-
-			tileStack.setIcon(new ImageIcon(Resource.getImage(
-					Resource.TILE_FOLDER + tile.getTileType().getFileName())
-					.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+			mapPane.repaint();
 		}
 	}
 
@@ -674,9 +647,6 @@ public class GameMenu implements Menu {
 	private class TilePlacedUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			// remove Tile preview
-			tileStack.setIcon(null);
-			tileStack.revalidate();
 			mapPane.repaint();
 		}
 	}

@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -162,7 +163,8 @@ public class MapPane extends JPanel {
 
 		// paint all tiles
 		for (ITile tile : game.getMap().getTiles()) {
-			paintTile(graphics, tile, tile.getCoordinates());
+			paintTile(graphics, tile,
+					Coordinates.pointFromField(tile.getCoordinates().toField()));
 		}
 
 		// paint empty spots
@@ -181,6 +183,8 @@ public class MapPane extends JPanel {
 
 		// and restore the old transform
 		graphics.setTransform(transformBackup);
+
+		paintTileOverlay(graphics);
 	}
 
 	/**
@@ -209,13 +213,13 @@ public class MapPane extends JPanel {
 	 * @param coords
 	 *            coordinates to paint tile at
 	 */
-	private void paintTile(Graphics2D graphics, ITile tile, ICoordinates coords) {
+	private void paintTile(Graphics2D graphics, ITile tile, Point point) {
 		BufferedImage image = Resource.getImage(Resource.TILE_FOLDER
 				+ tile.getTileType().getFileName());
 		AffineTransform preTransform = graphics.getTransform();
 		AffineTransform rotate = new AffineTransform(preTransform);
-		int rotateX = coords.getX() * Tile.TILE_SIZE + Tile.TILE_SIZE / 2;
-		int rotateY = coords.getY() * Tile.TILE_SIZE + Tile.TILE_SIZE / 2;
+		int rotateX = ((int) point.getX()) + Tile.TILE_SIZE / 2;
+		int rotateY = ((int) point.getY()) + Tile.TILE_SIZE / 2;
 
 		rotate.translate(rotateX, rotateY);
 		rotate.rotate(rotateMap.get(tile.getRotation()));
@@ -224,47 +228,50 @@ public class MapPane extends JPanel {
 		graphics.setTransform(rotate);
 
 		// draw the tile image
-		drawImage(graphics, image, coords.toField());
+		drawImage(graphics, image, point);
 
 		graphics.setTransform(preTransform);
 
 		// draw objects on each field
 		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
 			for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
-				paintField(graphics, tile.getField(y, x),
-						coords.toField().add(new Coordinates(x, y)));
+				Point fieldPoint = new Point(point);
+
+				fieldPoint
+						.translate(x * Field.FIELD_SIZE, y * Field.FIELD_SIZE);
+
+				paintField(graphics, tile.getField(y, x), fieldPoint);
 			}
 		}
 	}
 
-	private void paintField(Graphics2D graphics, IField field,
-			ICoordinates coords) {
+	private void paintField(Graphics2D graphics, IField field, Point point) {
 		IZombie zombie = field.getZombie();
 
 		// draw ammunition
 		if (field.hasAmmo()) {
 			drawImage(graphics,
-					Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png"), coords);
+					Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png"), point);
 		}
 
 		// draw life points
 		if (field.hasLife()) {
 			drawImage(graphics,
-					Resource.getImage(Resource.OBJ_FOLDER + "Life.png"), coords);
+					Resource.getImage(Resource.OBJ_FOLDER + "Life.png"), point);
 		}
 
 		// draw zombie if there is one
 		if (zombie instanceof Zombie) {
 			drawImage(graphics,
 					Resource.getImage(Resource.OBJ_FOLDER + "Zombie.png"),
-					coords);
+					point);
 		}
 
 		// draw super zombie if there is one
 		if (zombie instanceof SuperZombie) {
 			drawImage(graphics,
 					Resource.getImage(Resource.OBJ_FOLDER + "SuperZombie.png"),
-					coords);
+					point);
 		}
 	}
 
@@ -292,7 +299,8 @@ public class MapPane extends JPanel {
 				graphics.setColor(Color.RED);
 			}
 
-			fillSquare(graphics, coords.toField(), Tile.TILE_SIZE);
+			fillSquare(graphics, Coordinates.pointFromField(coords.toField()),
+					Tile.TILE_SIZE);
 		}
 
 		graphics.setComposite(comp);
@@ -315,7 +323,8 @@ public class MapPane extends JPanel {
 					AlphaComposite.SRC_OVER, 0.25f));
 		}
 
-		paintTile(graphics, tile, mouseCoords);
+		paintTile(graphics, tile,
+				Coordinates.pointFromField(mouseCoords.toField()));
 
 		graphics.setComposite(comp);
 	}
@@ -336,7 +345,8 @@ public class MapPane extends JPanel {
 			graphics.setColor(Color.GREEN);
 			graphics.setStroke(new BasicStroke(5));
 
-			drawSquare(graphics, coords, Field.FIELD_SIZE);
+			drawSquare(graphics, Coordinates.pointFromField(coords),
+					Field.FIELD_SIZE);
 
 			graphics.setStroke(stroke);
 		}
@@ -402,8 +412,8 @@ public class MapPane extends JPanel {
 								.getCoordinates())) {
 					graphics.setComposite(dimAlpha);
 					graphics.setColor(Color.black);
-					fillRect(graphics, coords, Field.FIELD_SIZE,
-							Field.FIELD_SIZE);
+					fillRect(graphics, Coordinates.pointFromField(coords),
+							Field.FIELD_SIZE, Field.FIELD_SIZE);
 					graphics.setComposite(comp);
 				}
 
@@ -434,7 +444,9 @@ public class MapPane extends JPanel {
 						graphics.setComposite(dimAlpha);
 						graphics.setColor(Color.black);
 
-						fillSquare(graphics, coords, Field.FIELD_SIZE);
+						fillSquare(graphics,
+								Coordinates.pointFromField(coords),
+								Field.FIELD_SIZE);
 
 						graphics.setComposite(comp);
 					}
@@ -445,7 +457,9 @@ public class MapPane extends JPanel {
 						graphics.setComposite(dimAlpha);
 						graphics.setColor(Color.black);
 
-						fillSquare(graphics, coords, Field.FIELD_SIZE);
+						fillSquare(graphics,
+								Coordinates.pointFromField(coords),
+								Field.FIELD_SIZE);
 
 						graphics.setComposite(comp);
 					}
@@ -454,41 +468,52 @@ public class MapPane extends JPanel {
 		}
 	}
 
-	private void fillSquare(Graphics2D graphics, ICoordinates coords, int size) {
-		fillRect(graphics, coords, size, size);
+	private void paintTileOverlay(Graphics2D graphics) {
+		AffineTransform transform = graphics.getTransform();
+		AffineTransform scaleTransform = new AffineTransform(transform);
+		ITile tile = game.getCurrentTile();
+		Point point = new Point();
+
+		if (tile == null) {
+			return;
+		}
+
+		scaleTransform.scale(150d / Tile.TILE_SIZE, 150d / Tile.TILE_SIZE);
+
+		try {
+			point.setLocation(scaleTransform.inverseTransform(
+					new Point(10, 10), null));
+		} catch (NoninvertibleTransformException ex) {
+			System.out.println("Couldn't transform point");
+		}
+
+		graphics.setTransform(scaleTransform);
+
+		paintTile(graphics, tile, point);
+
+		graphics.setTransform(transform);
 	}
 
-	private void fillRect(Graphics2D graphics, ICoordinates coords, int width,
+	private void fillSquare(Graphics2D graphics, Point2D point, int size) {
+		fillRect(graphics, point, size, size);
+	}
+
+	private void fillRect(Graphics2D graphics, Point2D point, int width,
 			int height) {
-		ICoordinates tile = coords.toTile();
-		ICoordinates field = coords.toRelativeField();
-
-		graphics.fillRect(tile.getX() * Tile.TILE_SIZE + field.getX()
-				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
-				* Field.FIELD_SIZE, width, height);
+		graphics.fillRect((int) point.getX(), (int) point.getY(), width, height);
 	}
 
-	private void drawSquare(Graphics2D graphics, ICoordinates coords, int size) {
-		drawRect(graphics, coords, size, size);
+	private void drawSquare(Graphics2D graphics, Point2D point, int size) {
+		drawRect(graphics, point, size, size);
 	}
 
-	private void drawRect(Graphics2D graphics, ICoordinates coords, int width,
+	private void drawRect(Graphics2D graphics, Point2D point, int width,
 			int height) {
-		ICoordinates tile = coords.toTile();
-		ICoordinates field = coords.toRelativeField();
-
-		graphics.drawRect(tile.getX() * Tile.TILE_SIZE + field.getX()
-				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
-				* Field.FIELD_SIZE, width, height);
+		graphics.drawRect((int) point.getX(), (int) point.getY(), width, height);
 	}
 
-	private void drawImage(Graphics2D graphics, Image image, ICoordinates coords) {
-		ICoordinates tile = coords.toTile();
-		ICoordinates field = coords.toRelativeField();
-
-		graphics.drawImage(image, tile.getX() * Tile.TILE_SIZE + field.getX()
-				* Field.FIELD_SIZE, tile.getY() * Tile.TILE_SIZE + field.getY()
-				* Field.FIELD_SIZE, null);
+	private void drawImage(Graphics2D graphics, Image image, Point2D point) {
+		graphics.drawImage(image, (int) point.getX(), (int) point.getY(), null);
 	}
 
 	/**
