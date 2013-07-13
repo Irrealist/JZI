@@ -596,12 +596,6 @@ public class MapPane extends JPanel {
 	}
 
 	private void drawImage(Graphics2D graphics, BufferedImage image,
-			Point2D point) {
-		drawImage(graphics, image, point,
-				new Dimension(image.getWidth(), image.getHeight()));
-	}
-
-	private void drawImage(Graphics2D graphics, BufferedImage image,
 			Point2D point, Dimension size) {
 		graphics.drawImage(image, (int) point.getX(), (int) point.getY(),
 				(int) size.getWidth(), (int) size.getHeight(), null);
