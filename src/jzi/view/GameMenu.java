@@ -1,28 +1,20 @@
 package jzi.view;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.HashMap;
 
 import net.miginfocom.swing.MigLayout;
-import jzi.Resource;
 import jzi.controller.state.FightState;
 import jzi.controller.state.IState;
 import jzi.controller.state.PlayerState;
 import jzi.controller.state.TileState;
 import jzi.controller.state.ZombieState;
-import jzi.model.entities.IPlayer;
 import jzi.model.game.Game;
 import jzi.model.game.IGame;
 
@@ -57,53 +49,13 @@ public class GameMenu implements Menu {
 	 */
 	private JPanel rollPanel = new JPanel();
 	/**
-	 * Player panel, contains player information.
-	 */
-	private JPanel playerPanel = new JPanel();
-	/**
 	 * Move panel, contains components related to zombie movement.
 	 */
 	private JPanel movePanel = new JPanel();
 	/**
-	 * Current player panel, contains information related to the current player.
-	 */
-	private JPanel currentPlayerPanel = new JPanel();
-	/**
-	 * All player panel, contains information about all players.
-	 */
-	private JPanel allPlayerPanel = new JPanel();
-	/**
 	 * Fight panel, contains components related to fights.
 	 */
 	private JPanel fightPanel = new JPanel();
-	/**
-	 * Label for the current player's name.
-	 */
-	private JLabel currentPlayer;
-	/**
-	 * Label for the current player's color.
-	 */
-	private JLabel currentPlayerColor;
-	/**
-	 * Scroll pane for all players.
-	 */
-	private JScrollPane scrollPane;
-	/**
-	 * Icon for life points.
-	 */
-	private JLabel lifeIcon;
-	/**
-	 * Icon for ammunition.
-	 */
-	private JLabel ammoIcon;
-	/**
-	 * Icon for zombie kills.
-	 */
-	private JLabel zombieIcon;
-	/**
-	 * Label for the number of points.
-	 */
-	private JLabel points;
 	/**
 	 * Label for the current state.
 	 */
@@ -125,10 +77,6 @@ public class GameMenu implements Menu {
 	 */
 	private JButton useLife;
 	/**
-	 * Table that contains player information.
-	 */
-	private Table allPlayerTable;
-	/**
 	 * Button for left rotation.
 	 */
 	private JButton rotateLeft;
@@ -148,22 +96,6 @@ public class GameMenu implements Menu {
 	 * Radio button for zombie placement.
 	 */
 	private JRadioButton placeZombie;
-	/**
-	 * Label for the player's ammunition.
-	 */
-	private JLabel ammo;
-	/**
-	 * Label for the player's life points.
-	 */
-	private JLabel life;
-	/**
-	 * Label for the number of revives the player has left.
-	 */
-	private JLabel revives;
-	/**
-	 * Panel containing player information.
-	 */
-	private JPanel infoPane = new JPanel();
 	/**
 	 * The window of the program.
 	 */
@@ -190,7 +122,6 @@ public class GameMenu implements Menu {
 		createUpdateMap();
 		setLayouts();
 		createLabelsandButtons(game);
-		setIcons();
 		addActionListener();
 
 		rollDie.setEnabled(false);
@@ -201,16 +132,6 @@ public class GameMenu implements Menu {
 		moveZombie.setEnabled(false);
 		placeZombie.setEnabled(false);
 
-		LinkedList<IPlayer> players = game.getPlayers();
-		for (int n = 0; n < players.size(); n++) {
-			playerPanel.add(new JLabel(players.get(n).getName()));
-			JLabel colorLabel = new JLabel();
-			colorLabel.setOpaque(true);
-			colorLabel.setMinimumSize(new Dimension(60, 20));
-			colorLabel.setBackground(players.get(n).getColor());
-			playerPanel.add(colorLabel);
-		}
-
 		setText();
 
 		addToPanel();
@@ -219,14 +140,11 @@ public class GameMenu implements Menu {
 		mapPane.addMouseListener(window.getMouseListener(Action.Map));
 
 		gameMenu.add(mapPane, "span 1 8");
-		gameMenu.add(currentPlayerPanel, "wrap");
 		gameMenu.add(controlPanel, "wrap");
-		gameMenu.add(infoPane, "wrap");
 		gameMenu.add(fightPanel, "wrap");
 		gameMenu.add(rollPanel, "wrap");
 		gameMenu.add(movePanel, "wrap");
 		gameMenu.add(tilePanel, "wrap");
-		gameMenu.add(allPlayerPanel, "wrap");
 		fightPanel.setVisible(false);
 		mapPane.repaint();
 	}
@@ -238,12 +156,8 @@ public class GameMenu implements Menu {
 		gameMenu.setLayout(new MigLayout("hidemode 3"));
 		controlPanel.setLayout(new MigLayout());
 		tilePanel.setLayout(new MigLayout());
-		playerPanel.setLayout(new MigLayout());
-		currentPlayerPanel.setLayout(new MigLayout());
 		rollPanel.setLayout(new MigLayout());
-		infoPane.setLayout(new MigLayout());
 		movePanel.setLayout(new MigLayout());
-		allPlayerPanel.setLayout(new MigLayout());
 		fightPanel.setLayout(new MigLayout());
 	}
 
@@ -251,16 +165,6 @@ public class GameMenu implements Menu {
 	 * add all Labels,Buttons to Panels.
 	 */
 	private void addToPanel() {
-		currentPlayerPanel.add(currentPlayer);
-		currentPlayerPanel.add(currentPlayerColor, "wrap");
-
-		infoPane.add(life);
-		infoPane.add(lifeIcon);
-		infoPane.add(ammo);
-		infoPane.add(ammoIcon);
-		infoPane.add(revives);
-		infoPane.add(points);
-		infoPane.add(zombieIcon, "wrap");
 		controlPanel.add(state);
 		controlPanel.add(cont, "wrap");
 
@@ -268,9 +172,6 @@ public class GameMenu implements Menu {
 		fightPanel.add(useLife);
 
 		rollPanel.add(rollDie, "wrap");
-
-		allPlayerPanel.setMinimumSize(new Dimension(250, 150));
-		allPlayerPanel.add(scrollPane);
 
 		movePanel.add(moveZombie);
 		movePanel.add(placeZombie, "wrap");
@@ -339,60 +240,11 @@ public class GameMenu implements Menu {
 		cont = new JButton();
 		moveZombie = new JRadioButton("", true);
 		placeZombie = new JRadioButton("", false);
-		createTable();
-		lifeIcon = new JLabel();
-		ammoIcon = new JLabel();
-		zombieIcon = new JLabel();
 		useAmmo = new JButton();
 		useLife = new JButton();
-		currentPlayer = new JLabel();
-		currentPlayerColor = new JLabel();
-		currentPlayerColor.setMinimumSize(new Dimension(60, 20));
-		currentPlayerColor.setOpaque(true);
-		ammo = new JLabel("0");
-		life = new JLabel("0");
-		points = new JLabel("0");
-		revives = new JLabel();
 
 		zombieGroup.add(moveZombie);
 		zombieGroup.add(placeZombie);
-	}
-
-	/**
-	 * create a Table for specific game mode.
-	 */
-	private void createTable() {
-		if (game.isHardcore()) {
-			Object[] columnNames = { Language.get("game.player.name"),
-					Language.get("game.player.color"), "", "", "",
-					Language.get("game.player.revives") };
-			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
-					.getPlayers().size()), game);
-
-		} else {
-			Object[] columnNames = { Language.get("game.player.name"),
-					Language.get("game.player.color"), "", "", "" };
-			allPlayerTable = new Table(new DefaultTableModel(columnNames, game
-					.getPlayers().size()), game);
-		}
-		scrollPane = new JScrollPane(allPlayerTable);
-	}
-
-	/**
-	 * set Icons to Lables.
-	 */
-	private void setIcons() {
-		Image scaleAmmoImage = Resource.getImage(
-				Resource.OBJ_FOLDER + "Ammo.png").getScaledInstance(30, 30, 0);
-		Image scaleLifeImage = Resource.getImage(
-				Resource.OBJ_FOLDER + "Life.png").getScaledInstance(30, 30, 0);
-		Image scaleZombieImage = Resource.getImage(
-				Resource.OBJ_FOLDER + "Zombie.png")
-				.getScaledInstance(30, 30, 0);
-
-		lifeIcon.setIcon(new ImageIcon(scaleLifeImage));
-		ammoIcon.setIcon(new ImageIcon(scaleAmmoImage));
-		zombieIcon.setIcon(new ImageIcon(scaleZombieImage));
 	}
 
 	/**
@@ -479,38 +331,6 @@ public class GameMenu implements Menu {
 	}
 
 	/**
-	 * Updates the current player.
-	 * 
-	 * @param game
-	 *            calling game instance
-	 * 
-	 */
-	private void updateCurrentPlayer(IGame game) {
-		for (int i = 0; i < game.getPlayers().size(); i++) {
-			allPlayerTable.setRow(i, game.getPlayers().get(i));
-		}
-
-		IPlayer player = game.getCurrentPlayer();
-		currentPlayer.setText(player.getName());
-		currentPlayerColor.setBackground(player.getColor());
-		ammo.setText(new Integer(player.getAmmo()).toString());
-		points.setText(new Integer(player.getPoints()).toString());
-
-		if (player.getLives() == 1) {
-			life.setText("1");
-		} else {
-			life.setText(new Integer(player.getLives()).toString());
-		}
-
-		if (game.isHardcore()) {
-			revives.setText(String.format(Language.get("game.revives"),
-					game.getRevives() - player.getRevives()));
-		}
-
-		mapPane.repaint();
-	}
-
-	/**
 	 * Update that gets called when a tile is drawn.
 	 * 
 	 * @author Tobias Groth
@@ -556,7 +376,6 @@ public class GameMenu implements Menu {
 				tilePanel.setVisible(true);
 				rollPanel.setVisible(false);
 				fightPanel.setVisible(false);
-				infoPane.setVisible(false);
 				movePanel.setVisible(false);
 			}
 
@@ -566,7 +385,6 @@ public class GameMenu implements Menu {
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
-				infoPane.setVisible(false);
 				movePanel.setVisible(false);
 			}
 
@@ -576,8 +394,6 @@ public class GameMenu implements Menu {
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				game.update(Update.PlayerAttributeUpdate);
-				revives.setVisible(true);
-				infoPane.setVisible(true);
 				movePanel.setVisible(false);
 			}
 
@@ -586,7 +402,6 @@ public class GameMenu implements Menu {
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
-				infoPane.setVisible(false);
 				movePanel.setVisible(true);
 			}
 		}
@@ -641,7 +456,6 @@ public class GameMenu implements Menu {
 	private class PlayerChangeUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			updateCurrentPlayer((Game) o);
 			mapPane.focus(game.getCurrentPlayer().getCoordinates());
 			mapPane.repaint();
 		}
@@ -656,7 +470,6 @@ public class GameMenu implements Menu {
 	private class PlayerAttributeUpdate implements ViewUpdate {
 		@Override
 		public void execute(Observable o) {
-			updateCurrentPlayer((Game) o);
 			mapPane.repaint();
 		}
 	}
@@ -827,7 +640,6 @@ public class GameMenu implements Menu {
 	private void setText() {
 		rollDie.setText(Language.get("game.roll"));
 		drawTile.setText(Language.get("game.draw"));
-		allPlayerTable.changeLanguage();
 		rotateLeft.setText(Language.get("game.rotate.left"));
 		rotateRight.setText(Language.get("game.rotate.right"));
 		cont.setText(Language.get("game.continue"));

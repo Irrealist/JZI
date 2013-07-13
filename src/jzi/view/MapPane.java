@@ -5,9 +5,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
@@ -139,6 +140,9 @@ public class MapPane extends JPanel {
 		Graphics2D graphics = (Graphics2D) g;
 		AffineTransform transformBackup = graphics.getTransform();
 
+		// set the font
+		graphics.setFont(new Font("Arial", Font.BOLD, 20));
+
 		// paint the background
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, getWidth(), getHeight());
@@ -187,6 +191,8 @@ public class MapPane extends JPanel {
 		paintTileOverlay(graphics);
 
 		paintDie(graphics);
+
+		paintInfo(graphics);
 	}
 
 	/**
@@ -205,23 +211,19 @@ public class MapPane extends JPanel {
 				* Field.FIELD_SIZE + Field.FIELD_SIZE / 2;
 	}
 
-	/**
-	 * Paints one tile onto the map.
-	 * 
-	 * @param graphics
-	 *            graphics object that handles the actual painting
-	 * @param tile
-	 *            tile to be painted
-	 * @param coords
-	 *            coordinates to paint tile at
-	 */
 	private void paintTile(Graphics2D graphics, ITile tile, Point point) {
+		paintTile(graphics, tile, point, new Dimension(Tile.TILE_SIZE,
+				Tile.TILE_SIZE));
+	}
+
+	private void paintTile(Graphics2D graphics, ITile tile, Point point,
+			Dimension size) {
 		BufferedImage image = Resource.getImage(Resource.TILE_FOLDER
 				+ tile.getTileType().getFileName());
 		AffineTransform preTransform = graphics.getTransform();
 		AffineTransform rotate = new AffineTransform(preTransform);
-		int rotateX = ((int) point.getX()) + Tile.TILE_SIZE / 2;
-		int rotateY = ((int) point.getY()) + Tile.TILE_SIZE / 2;
+		int rotateX = ((int) point.getX()) + (int) size.getWidth() / 2;
+		int rotateY = ((int) point.getY()) + (int) size.getHeight() / 2;
 
 		rotate.translate(rotateX, rotateY);
 		rotate.rotate(rotateMap.get(tile.getRotation()));
@@ -230,7 +232,7 @@ public class MapPane extends JPanel {
 		graphics.setTransform(rotate);
 
 		// draw the tile image
-		drawImage(graphics, image, point);
+		drawImage(graphics, image, point, size);
 
 		graphics.setTransform(preTransform);
 
@@ -238,42 +240,50 @@ public class MapPane extends JPanel {
 		for (int x = 0; x < Tile.WIDTH_FIELDS; x++) {
 			for (int y = 0; y < Tile.HEIGHT_FIELDS; y++) {
 				Point fieldPoint = new Point(point);
+				int fx = x * Field.FIELD_SIZE;
+				int fy = y * Field.FIELD_SIZE;
 
-				fieldPoint
-						.translate(x * Field.FIELD_SIZE, y * Field.FIELD_SIZE);
+				fieldPoint.translate(
+						(int) (fx * size.getWidth() / Tile.TILE_SIZE),
+						(int) (fy * size.getHeight() / Tile.TILE_SIZE));
 
-				paintField(graphics, tile.getField(y, x), fieldPoint);
+				paintField(graphics, tile.getField(y, x), fieldPoint, size);
 			}
 		}
 	}
 
-	private void paintField(Graphics2D graphics, IField field, Point point) {
+	private void paintField(Graphics2D graphics, IField field, Point point,
+			Dimension size) {
 		IZombie zombie = field.getZombie();
+		Dimension fieldSize = new Dimension((int) size.getWidth() / 3,
+				(int) size.getHeight() / 3);
 
 		// draw ammunition
 		if (field.hasAmmo()) {
 			drawImage(graphics,
-					Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png"), point);
+					Resource.getImage(Resource.OBJ_FOLDER + "Ammo.png"), point,
+					fieldSize);
 		}
 
 		// draw life points
 		if (field.hasLife()) {
 			drawImage(graphics,
-					Resource.getImage(Resource.OBJ_FOLDER + "Life.png"), point);
+					Resource.getImage(Resource.OBJ_FOLDER + "Life.png"), point,
+					fieldSize);
 		}
 
 		// draw zombie if there is one
 		if (zombie instanceof Zombie) {
 			drawImage(graphics,
 					Resource.getImage(Resource.OBJ_FOLDER + "Zombie.png"),
-					point);
+					point, fieldSize);
 		}
 
 		// draw super zombie if there is one
 		if (zombie instanceof SuperZombie) {
 			drawImage(graphics,
 					Resource.getImage(Resource.OBJ_FOLDER + "SuperZombie.png"),
-					point);
+					point, fieldSize);
 		}
 	}
 
@@ -471,57 +481,100 @@ public class MapPane extends JPanel {
 	}
 
 	private void paintTileOverlay(Graphics2D graphics) {
-		AffineTransform transform = graphics.getTransform();
-		AffineTransform scaleTransform = new AffineTransform(transform);
 		ITile tile = game.getCurrentTile();
-		Point point = new Point();
 
 		if (tile == null) {
 			return;
 		}
 
-		scaleTransform.scale(150d / Tile.TILE_SIZE, 150d / Tile.TILE_SIZE);
-
-		try {
-			point.setLocation(scaleTransform.inverseTransform(
-					new Point(10, 10), null));
-		} catch (NoninvertibleTransformException ex) {
-			System.out.println("Couldn't transform point");
-		}
-
-		graphics.setTransform(scaleTransform);
-
-		paintTile(graphics, tile, point);
-
-		graphics.setTransform(transform);
+		paintTile(graphics, tile, new Point(10, 10), new Dimension(150, 150));
 	}
 
 	private void paintDie(Graphics2D graphics) {
-		AffineTransform transform = graphics.getTransform();
-		AffineTransform scaleTransform = new AffineTransform(transform);
-		Point point = new Point();
-		BufferedImage image = null;
-
 		if (game.getDie() == 0) {
 			return;
 		}
 
-		scaleTransform.scale(150d / 800, 150d / 800);
+		drawImage(
+				graphics,
+				Resource.getImage(Resource.DIE_FOLDER + game.getDie() + ".png"),
+				new Point(10, 10), new Dimension(150, 150));
+	}
 
-		try {
-			point.setLocation(scaleTransform.inverseTransform(
-					new Point(10, 10), null));
-		} catch (NoninvertibleTransformException ex) {
-			System.out.println("Couldn't transform point");
+	private void paintInfo(Graphics2D graphics) {
+		IPlayer player = game.getCurrentPlayer();
+
+		paintName(graphics, player);
+		paintLife(graphics, player);
+		paintAmmo(graphics, player);
+		paintPoints(graphics, player);
+	}
+
+	private void paintName(Graphics2D graphics, IPlayer player) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		Color color = player.getColor();
+		int playerWidth = metrics.stringWidth(player.getName());
+		int playerHeight = metrics.getHeight();
+		Point point = new Point(getWidth() - 160, 10);
+
+		graphics.setColor(color);
+
+		fillRect(graphics, point, 150, 30);
+
+		if ((0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color
+				.getBlue()) / 255 > 0.5) {
+			graphics.setColor(Color.BLACK);
+		} else {
+			graphics.setColor(Color.WHITE);
 		}
 
-		graphics.setTransform(scaleTransform);
+		graphics.drawString(player.getName(), (int) point.getX() + 75
+				- playerWidth / 2, (int) point.getY() + 30 - playerHeight / 2);
+	}
 
-		image = Resource.getImage(Resource.DIE_FOLDER + game.getDie() + ".png");
+	private void paintLife(Graphics2D graphics, IPlayer player) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		BufferedImage image = Resource.getImage(Resource.OBJ_FOLDER
+				+ "Life.png");
+		Point point = new Point(getWidth() - 40, 50);
+		String str = Integer.toString(player.getLives());
 
-		drawImage(graphics, image, point);
+		drawImage(graphics, image, point, new Dimension(30, 30));
 
-		graphics.setTransform(transform);
+		graphics.setColor(Color.white);
+		graphics.drawString(str,
+				(int) point.getX() - 10 - metrics.stringWidth(str),
+				(int) point.getY() + metrics.getHeight());
+	}
+
+	private void paintAmmo(Graphics2D graphics, IPlayer player) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		BufferedImage image = Resource.getImage(Resource.OBJ_FOLDER
+				+ "Ammo.png");
+		Point point = new Point(getWidth() - 40, 90);
+		String str = Integer.toString(player.getAmmo());
+
+		drawImage(graphics, image, point, new Dimension(30, 30));
+
+		graphics.setColor(Color.white);
+		graphics.drawString(str,
+				(int) point.getX() - 10 - metrics.stringWidth(str),
+				(int) point.getY() + metrics.getHeight());
+	}
+
+	private void paintPoints(Graphics2D graphics, IPlayer player) {
+		FontMetrics metrics = graphics.getFontMetrics();
+		BufferedImage image = Resource.getImage(Resource.OBJ_FOLDER
+				+ "Zombie.png");
+		Point point = new Point(getWidth() - 40, 130);
+		String str = Integer.toString(player.getPoints());
+
+		drawImage(graphics, image, point, new Dimension(30, 30));
+
+		graphics.setColor(Color.white);
+		graphics.drawString(str,
+				(int) point.getX() - 10 - metrics.stringWidth(str),
+				(int) point.getY() + metrics.getHeight());
 	}
 
 	private void fillSquare(Graphics2D graphics, Point2D point, int size) {
@@ -542,8 +595,16 @@ public class MapPane extends JPanel {
 		graphics.drawRect((int) point.getX(), (int) point.getY(), width, height);
 	}
 
-	private void drawImage(Graphics2D graphics, Image image, Point2D point) {
-		graphics.drawImage(image, (int) point.getX(), (int) point.getY(), null);
+	private void drawImage(Graphics2D graphics, BufferedImage image,
+			Point2D point) {
+		drawImage(graphics, image, point,
+				new Dimension(image.getWidth(), image.getHeight()));
+	}
+
+	private void drawImage(Graphics2D graphics, BufferedImage image,
+			Point2D point, Dimension size) {
+		graphics.drawImage(image, (int) point.getX(), (int) point.getY(),
+				(int) size.getWidth(), (int) size.getHeight(), null);
 	}
 
 	/**
