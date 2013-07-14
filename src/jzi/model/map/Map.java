@@ -2,6 +2,7 @@ package jzi.model.map;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -352,5 +353,88 @@ public class Map implements IMap, java.io.Serializable {
 	 */
 	public void setHashMap(HashMap<ICoordinates, ITile> tiles) {
 		this.tiles = tiles;
+	}
+
+	public Path getPath(ICoordinates start, ICoordinates end) {
+		Path result = new Path();
+		PriorityQueue<Node> open = new PriorityQueue<>();
+
+		while (!open.isEmpty()) {
+			Node node = open.remove();
+			
+			if (node.getCoordinates().equals(end)) {
+				break;
+			}
+			
+			for (IDirection dir : Direction.values()) {
+				
+			}
+		}
+
+		return result;
+	}
+
+	private class Node {
+		private double g;
+		private double h;
+		private ICoordinates coords;
+		private Node parent;
+
+		public Node(Node parent) {
+			this.parent = parent;
+			g = parent.g() + 1;
+		}
+		
+		public ICoordinates getCoordinates() {
+			return coords;
+		}
+
+		public double f() {
+			return g + h;
+		}
+
+		public double g() {
+			return g;
+		}
+
+		public double h() {
+			return h;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result
+					+ ((coords == null) ? 0 : coords.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+
+			if (obj == null) {
+				return false;
+			}
+
+			if (!(obj instanceof Node)) {
+				return false;
+			}
+
+			Node other = (Node) obj;
+
+			if (coords == null) {
+				if (other.coords != null) {
+					return false;
+				}
+			} else if (!coords.equals(other.coords)) {
+				return false;
+			}
+
+			return true;
+		}
 	}
 }
