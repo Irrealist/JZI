@@ -2,7 +2,6 @@ package jzi.view;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -56,10 +55,6 @@ public class GameMenu implements Menu {
 	 * Fight panel, contains components related to fights.
 	 */
 	private JPanel fightPanel = new JPanel();
-	/**
-	 * Label for the current state.
-	 */
-	private JLabel state = new JLabel();
 	/**
 	 * Button for rolling.
 	 */
@@ -165,7 +160,6 @@ public class GameMenu implements Menu {
 	 * add all Labels,Buttons to Panels.
 	 */
 	private void addToPanel() {
-		controlPanel.add(state);
 		controlPanel.add(cont, "wrap");
 
 		fightPanel.add(useAmmo, "wrap");
@@ -372,7 +366,6 @@ public class GameMenu implements Menu {
 			IState current = ((Game) o).getCurrentState();
 
 			if (current instanceof TileState) {
-				state.setText(Language.get("game.mode.tile"));
 				tilePanel.setVisible(true);
 				rollPanel.setVisible(false);
 				fightPanel.setVisible(false);
@@ -381,7 +374,6 @@ public class GameMenu implements Menu {
 
 			if (current instanceof PlayerState) {
 				mapPane.focus(game.getCurrentPlayer().getCoordinates());
-				state.setText(Language.get("game.mode.move"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
@@ -390,7 +382,6 @@ public class GameMenu implements Menu {
 
 			if (current instanceof FightState) {
 				mapPane.focus(game.getCurrentPlayer().getCoordinates());
-				state.setText(Language.get("game.mode.fight"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				game.update(Update.PlayerAttributeUpdate);
@@ -398,7 +389,6 @@ public class GameMenu implements Menu {
 			}
 
 			if (current instanceof ZombieState) {
-				state.setText(Language.get("game.mode.zombie"));
 				tilePanel.setVisible(false);
 				rollPanel.setVisible(true);
 				fightPanel.setVisible(false);
